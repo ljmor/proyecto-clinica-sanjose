@@ -1,0 +1,244 @@
+import { Alert, Box, Button, Divider, Grid2, TextField, Typography } from "@mui/material"
+import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "../../../hooks/useForm";
+import { useMemo } from "react";
+import { startLogin } from "../../../store/auth/thunks";
+
+const formData = {
+    email: '',
+    password: '',
+}
+
+export const LoginForm = () => {
+
+    const { status, errorMessage } = useSelector(state => state.auth)
+    const dispatch = useDispatch();
+
+    const { email, password, onInputChange, formState } = useForm(formData);
+
+    const isAuth = useMemo( () => status === 'checking', [status]);
+
+    const onSubmit = (event) => {
+        event.preventDefault();
+        dispatch(startLogin({ email, password }));
+    }
+
+    return (
+        <>
+            <Grid2
+                size={{
+                    xs: 12,
+                    md: 5,
+                    lg: 3,
+                }}
+                sx={{
+
+                    backgroundColor: '#FFFFFF',
+                    padding: '95px 47px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start',
+                    alignItems: 'flex-start',
+                    boxShadow: '7px 0px 46px 5px rgba(0, 0, 0, 0.25)',
+                    fontFamily: 'Merriweather Sans',
+                }}
+            >
+                <Typography
+                    sx={{
+                        color: '#098280',
+                        fontFamily: "Merriweather Sans",
+                        fontSize: '30px',
+                        fontStyle: 'normal',
+                        fontWeight: '400',
+                        lineHeight: 'normal',
+                        mb: '10px'
+                    }}
+                >
+                    Iniciar Sesión
+                </Typography>
+
+                <Typography
+                    sx={{
+                        color: '#303030',
+                        fontSize: '19px',
+                        fontStyle: 'normal',
+                        fontWeight: '300',
+                        lineHeight: 'normal'
+                    }}
+                >
+                    Acceder al sistema de gestión hospitalaria
+                </Typography>
+                <Divider sx={{ width: '100%', margin: '30px 0' }} />
+
+                {/* Formulario */}
+                <form style={{ width: '97%' }} onSubmit={onSubmit} >
+                    <Grid2 container direction='column' sx={{ mb: '15px', width: '100%' }}>
+                        <Typography
+                            variant='caption'
+                            component='label'
+                            htmlFor='emailid'
+                            sx={{
+                                color: 'rgba(0, 0, 0, 0.48)',
+                                fontFeatureSettings: "'liga' off, 'clig' off",
+                                fontFamily: 'Roboto',
+                                fontSize: '13px',
+                                fontStyle: 'normal',
+                                fontWeight: '300',
+                                lineHeight: '20px',
+                                marginLeft: '10px',
+                            }}
+                        >
+                            Usuario
+                        </Typography>
+                        <TextField
+                            type='email'
+                            placeholder='Correo electrónico'
+                            id='emailid'
+
+                            name="email"
+                            value={email}
+                            onChange={onInputChange}
+                            fullWidth
+                            slotProps={{
+                                input: {
+                                    sx: {
+                                        width: '100%',
+                                        height: '48px',
+                                        padding: '8px 8px 8px 16px',
+                                        backgroundColor: '#f2f2f2',
+                                        borderRadius: '4px',
+                                        '& input': {
+                                            color: '#080808',
+                                        },
+                                        '& input::-webkit-input-placeholder': {
+                                            color: '#080808',
+                                        },
+                                        '& .MuiOutlinedInput-notchedOutline': {
+                                            border: 'none'
+                                        },
+                                    },
+                                }
+                            }}
+                        />
+                    </Grid2>
+
+                    <Grid2 container direction='column' sx={{ mb: '15px', width: '100%' }}>
+                        <Typography
+                            variant='caption'
+                            component='label'
+                            htmlFor='passid'
+                            sx={{
+                                color: 'rgba(0, 0, 0, 0.48)',
+                                fontFeatureSettings: "'liga' off, 'clig' off",
+                                fontFamily: 'Roboto',
+                                fontSize: '13px',
+                                fontStyle: 'normal',
+                                fontWeight: '300',
+                                lineHeight: '20px',
+                                marginLeft: '10px',
+                            }}
+                        >
+                            Contraseña
+                        </Typography>
+                        <TextField
+                            type='password'
+                            placeholder='Ingresar contraseña'
+                            id='passid'
+                            name="password"
+                            value={password}
+                            onChange={onInputChange}
+                            fullWidth
+                            slotProps={{
+                                input: {
+                                    sx: {
+                                        width: '100%',
+                                        height: '48px',
+                                        padding: '8px 8px 8px 16px',
+                                        backgroundColor: '#f2f2f2',
+                                        borderRadius: '4px',
+                                        '& input': {
+                                            color: '#080808',
+                                        },
+                                        '& input::-webkit-input-placeholder': {
+                                            color: '#080808',
+                                        },
+                                        '& .MuiOutlinedInput-notchedOutline': {
+                                            border: 'none'
+                                        },
+                                    },
+                                }
+                            }}
+                        />
+                    </Grid2>
+
+                    <Typography
+                        sx={{
+                            fontFamily: 'Roboto',
+                            fontWeight: '400',
+                            fontSize: '12px',
+                            lineHeight: '20px',
+                            textAlign: 'right',
+                            justifySelf: 'end',
+                            color: '#007AFF',
+                            ':hover': {
+                                cursor: 'pointer',
+                                color: '#025bbd',
+                                transition: '0.2s ease-in-out'
+                            }
+                        }}
+                    >
+                        ¿Olvidaste tu contraseña?
+                    </Typography>
+
+                    {/* En caso de error */}
+                    <Grid2 size={{ xs: 12 }} display={ (errorMessage === null || errorMessage === undefined ) ? 'none' : '' } >
+                        <Alert severity='warning'>
+                            { errorMessage }
+                        </Alert>
+                    </Grid2>
+
+                    <Button
+                        type='submit'
+                        disabled={isAuth}
+                        sx={{
+                            width: '113px',
+                            height: '40px',
+                            backgroundImage: 'linear-gradient(90deg, #43A65E 0%, #6CB150 100%)',
+                            borderRadius: '6px',
+                            mt: '30px',
+                            ':hover': {
+                                cursor: 'pointer',
+                                backgroundImage: 'linear-gradient(90deg, #3b9252 0%, #5f9d46 100%)',
+                                transition: '2s ease-in-out'
+                            },
+                            fontSize: '15px',
+                            fontWeight: 700,
+                            lineHeight: '20px',
+                            textTransform: 'none',
+                            color: '#FFFFFF',
+                            fontFamily: 'Roboto'
+                        }}
+                    >
+                        Acceder
+                    </Button>
+                </form>
+
+                {/* Logo */}
+                <Box
+                    component="img"
+                    sx={{
+                        height: '110px',
+                        width: '270px',
+                        alignSelf: 'center',
+                        position: 'fixed',
+                        bottom: '0',
+                        mb: '15px'
+                    }}
+                    alt="Logo de la clínica San José"
+                    src="../src/modules/auth/imgs/logo1.png"
+                />
+
+            </Grid2>
+        </>
+    )
+}
