@@ -15,8 +15,7 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { FaChartBar, FaUserMd, FaNotesMedical, FaUserInjured } from 'react-icons/fa';
-import { LogoutRounded } from '@mui/icons-material';
-import { Navigate } from 'react-router-dom';
+// import {img} from '../imgs/';
 
 const menuItems = [
   { text: 'Estadísticas', icon: <FaChartBar /> },
@@ -52,11 +51,30 @@ export const SideBar = () => {
   };
 
   const drawerContent = (
-    <Box sx={{ width: 240, bgcolor: '#303030', height: '100%', color: 'white', overflow: 'hidden', }}>
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 64 }}>
-        <Typography variant="h6">LOGO</Typography>
-      </Box>
-      <Divider sx={{ bgcolor: 'white', width: '80%', margin: '0 20px' }} />
+    <Box
+      sx={{
+        bgcolor: '#303030',
+        height: '100%',
+        color: 'white',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Box
+        component="img"
+        sx={{
+            height: '130px',
+            width: '100px',
+            alignSelf: 'center',
+            margin: '10px 0',
+            justifySelf: 'center',
+        }}
+        alt="Logo de la clínica San José"
+        // src="../imgs/logo2.png"
+        src="/src/modules/gestion_usuarios/admin/imgs/logo2.png"
+      />
+      <Divider sx={{ bgcolor: 'white', width: '80%', alignSelf: 'center' }} />
+
       <List sx={{ overflow: 'hidden' }}>
         {menuItems.map((item) => (
           <ListItem
@@ -67,6 +85,7 @@ export const SideBar = () => {
               bgcolor: selectedItem === item.text ? 'rgba(176, 205, 111, 0.15)' : 'transparent',
               '&:hover': {
                 bgcolor: 'rgba(255, 255, 255, 0.08)',
+                cursor: 'pointer',
               },
             }}
           >
@@ -76,31 +95,19 @@ export const SideBar = () => {
         ))}
       </List>
 
-      <Box
-        sx={{
-          justifySelf: 'start',
-          alignSelf: 'flex-end',
-          ml: '10px',
-          mt: '30px'
-        }}
-      >
-          <IconButton onClick={onExit} >
-            <LogoutRounded sx={{ backgroundColor: '#FFF', borderRadius: '10px', width: '50px'}}/>
-          </IconButton>
-        </Box>
     </Box>
   );
 
   return (
     <>
-      <Box sx={{ display: 'flex', marginTop: '64px' }}>
+      <Box sx={{ display: 'flex', mt: '64px' }}>
         {isMobile && (
           <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, position: 'fixed', top: 8, left: 8, zIndex: 1100 }}
+            sx={{ mr: 2, ml: '10px', mt: '9px', position: 'fixed', top: 8, left: 8, zIndex: 1100 }}
           >
             <MenuIcon />
           </IconButton>

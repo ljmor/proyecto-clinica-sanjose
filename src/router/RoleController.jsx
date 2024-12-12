@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { AdminRoutes } from '../modules/admin/routes/AdminRoutes'
+import { AdminRoutes } from '../modules/gestion_usuarios/admin/routes/AdminRoutes'
 
 export const RoleController = () => {
 

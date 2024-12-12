@@ -5,7 +5,7 @@ import { NavBar } from './components/NavBar'
 export const AdminLayout = ({ children }) => {
     return (
         
-        <>
+        <div className='adminlayout' style={{ fontFamily: 'Poppins' }} >
             {/* NavBar */}
             <NavBar/>
             {/* SideBar */}
@@ -13,6 +13,6 @@ export const AdminLayout = ({ children }) => {
 
             {/* Main content */}
             { children }
-        </>
+        </div>
     )
 }

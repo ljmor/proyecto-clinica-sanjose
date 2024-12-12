@@ -9,6 +9,7 @@ export const startLogin = ({ email, password }) => {
         // Proceso asyncrono para obtener los datos
         console.log(`Email: ${email} --- Password: ${password}`);
         
+        // Simulacion de datos obtenidos desde API
         const result = {
             ok: true,
             user: {
