@@ -6,7 +6,7 @@ El Sistema de Gestión Hospitalaria Clínica San José es una aplicación web en
 ## Equipo de Desarrollo
 * **Luis Mora:** [@ljmor](https://github.com/ljmor)
 * **Renato Rojas:** [@GabrielR1906](https://github.com/GabrielR1906)
-* **Oliver Saraguro:** [Usuario de GitHub]
+* **Oliver Saraguro:** [@OliverSaraguro](https://github.com/OliverSaraguro)
 * **Juan García:** [@JuanD425567](https://github.com/JuanD425567)
 
 ## Módulos Principales
