@@ -28,6 +28,68 @@ El Sistema de Gestión Hospitalaria Clínica San José es una aplicación web en
     * **Express:** Framework web minimalista para Node.js, que simplifica la creación de servidores HTTP.
     * **MySQL:** Sistema de gestión de bases de datos relacionales, utilizado para almacenar la información del sistema.
 
+¡Claro\! Aquí te presento un borrador de instrucciones detalladas para que alguien pueda clonar y trabajar en tu proyecto, considerando que utilizas Vite y Yarn:
+
+## Instrucciones para configurar y ejecutar el proyecto
+
+### Requisitos previos
+
+  * **Node.js y npm (o yarn) instalados:** Asegurarse de tener Node.js y un gestor de paquetes como npm o yarn instalados en el sistema. Puedes descargarlos desde [https://nodejs.org/](https://www.google.com/url?sa=E&source=gmail&q=https://nodejs.org/).
+  * **Un editor de código:** Visual Studio Code, Sublime Text o cualquier otro editor de tu preferencia.
+
+### Clonar el repositorio
+
+1.  **Abrir terminal o línea de comandos.**
+2.  **Navegar hasta la carpeta donde desea clonar el proyecto:**
+    ```bash
+    cd /ruta/a/tu/carpeta/deseada
+    ```
+3.  **Clonar el repositorio:**
+    ```bash
+    git clone https://github.com/ljmor/proyecto-clinica-sanjose
+    ```
+
+### Instalar dependencias
+
+1.  **Accede al directorio del proyecto:**
+    ```bash
+    cd proyecto-clinica-sanjose
+    ```
+2.  **Instala las dependencias:**
+    ```bash
+    yarn install
+    ```
+    Este comando instalará todas las dependencias listadas en el archivo `package.json`.
+
+### Iniciar el servidor de desarrollo
+
+1.  **Inicia el servidor de desarrollo:**
+    ```bash
+    yarn dev
+    ```
+    Esto iniciará un servidor de desarrollo local y abrirá la aplicación en el navegador por defecto. Por lo general, la dirección será `http://localhost:3000`.
+
+### Estructura del proyecto
+
+  * **src:** Contiene el código fuente de tu aplicación React.
+  * **public:** Contiene archivos estáticos como el archivo logos de la app.
+  * **node\_modules:** Contiene las dependencias instaladas.
+
+### Trabajar en el proyecto
+
+  * **Realizar cambios en los archivos de la carpeta `src`:** Edita los componentes, estilos y lógica del módulo que te corresponde.
+  * **Guarda los cambios:** Los cambios se guardarán automáticamente y el servidor de desarrollo recargará la página.
+  * **Utiliza las herramientas de desarrollo de tu navegador:** Para depurar y inspeccionar tu aplicación.
+
+### Construir para producción
+
+1.  **Para crear una versión de producción:**
+    ```bash
+    yarn build
+    ```
+    Esto generará los archivos estáticos optimizados en la carpeta `dist`.
+
+
 ## Estado del Proyecto
 El proyecto se encuentra actualmente en fases iniciales de desarrollo. Este README será actualizado periódicamente para reflejar los avances y cambios realizados. 
 
