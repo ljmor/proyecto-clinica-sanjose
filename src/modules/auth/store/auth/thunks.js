@@ -14,9 +14,10 @@ export const startLogin = ({ email, password }) => {
             ok: true,
             user: {
                 id: 1,
-                name: 'John Doe',
+                nombres: 'Luis Mora',
+                cedula: '11032035',
                 email: 'johndoe@example.com',
-                role: 'admin',
+                rol: 'doctor',
                 profile_image: 'dsf'
             }
         }

@@ -53,12 +53,31 @@ export const startLoadingRegisters = (type) => {
                     // const { pats } = await api.get('/pats');
 
                     // Simulacion de datos para pruebas
+                    /* Datos de un paciente
+                    {
+                    id: ..,
+                    nombres: ..,
+                    cedula: ..,
+                    email: ..,
+                    fechanac:..,
+                    contactos: [ .., .. ],
+                    direccion:..,
+                    contactos_emerg: [ {..: ..}, {..: ..} ],
+                    tipo_sangre: ..,
+                    sexo: ..,
+                    fecha_ult_admision: ..,
+                    ... aun hay info por ver que tambien se debe agregar
+                    historias: [
+                        { id: .., nombredelformulario: .., archivo: archivodeexcel, fechacreacion: .., fecha_ult_mod: .., nroforms: .., estado: enEspera, abierta, cerrada }
+                    ]
+                    }
+                    */
                     const pats = {
                         ok: true,
                         results: [
-                            { id: 7, nombres: 'Oliver Saraguro', email: 'johndoe@example.com', especialidad: 'Cardiologo', disponibilidad: 'Disponible', nropacientes: 10, cedula: '1321231', fechanac: '01/01/2004', contacto: '+5930320320', direccion: 'Av siempre viva' },
-                            { id: 8, nombres: 'Renato Rojas', email: 'johndoe@example.com', especialidad: 'Cardiologo', disponibilidad: 'Disponible', nropacientes: 10, cedula: '1321231', fechanac: '01/01/2004', contacto: '+5930320320', direccion: 'Av siempre viva' },
-                            { id: 9, nombres: 'John Doe 3', email: 'johndoe@example.com', especialidad: 'Cardiologo', disponibilidad: 'Disponible', nropacientes: 10, cedula: '1321231', fechanac: '01/01/2004', contacto: '+5930320320', direccion: 'Av siempre viva' },
+                            { id: 7, nombres: 'Oliver Saraguro', email: 'johndoe@example.com', tipo_sangre: 'A+', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '1321231', fechanac: '01/01/2004', edad: '18' },
+                            { id: 8, nombres: 'Renato Rojas',    email: 'johndoe@example.com', tipo_sangre: 'A+', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '1321231', fechanac: '01/01/2004', edad: '18' },
+                            { id: 9, nombres: 'John Doe 3',      email: 'johndoe@example.com', tipo_sangre: 'A+', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '1321231', fechanac: '01/01/2004', edad: '18' },
                         ],
                         type: 'patients'
                     }
