@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AdminRoutes } from '../modules/gestion_usuarios/admin/routes/AdminRoutes'
 import { DoctorRoutes } from '../modules/gestion_usuarios/medico/routes/DoctorRoutes'
+import { EnfermeriaRoutes } from '../modules/gestion_usuarios/enfermeria/routes/EnfermeriaRoutes'
+import { PacienteRoutes } from '../modules/gestion_usuarios/paciente/routes/PacienteRoutes'
 
 export const RoleController = () => {
 
@@ -30,8 +32,17 @@ export const RoleController = () => {
     if (resp.user.rol === 'nurse') {
         return (
             <Routes>
-                <Route path="/admin/*" element={<AdminRoutes />} />
-                <Route path="/*" element={<Navigate to="admin" />} />
+                <Route path="/enfermeria/*" element={<EnfermeriaRoutes />} />
+                <Route path="/*" element={<Navigate to="enfermeria" />} />
+            </Routes>
+        )
+    }
+
+    if (resp.user.rol === 'patient') {
+        return (
+            <Routes>
+                <Route path="/paciente/*" element={<PacienteRoutes />} />
+                <Route path="/*" element={<Navigate to="paciente" />} />
             </Routes>
         )
     }

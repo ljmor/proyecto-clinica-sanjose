@@ -1,10 +1,12 @@
 import React from 'react';
-import { Box, Typography, Button, Container } from '@mui/material';
+import { Box, Typography, Button, Container, IconButton, Tooltip } from '@mui/material';
 import { styled } from '@mui/system';
 import { motion } from 'framer-motion';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { IoMdArrowRoundForward } from 'react-icons/io';
+import { startLogout } from '../../../auth/store/auth/thunks';
+import { Logout } from '@mui/icons-material';
 
 const BackgroundCircle = styled('div')(({ size, color, top, left, bottom, right }) => ({
     position: 'absolute',
@@ -52,11 +54,16 @@ const StyledButton = styled(Button)({
 export const InicioPage = () => {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const { resp } = useSelector(state => state.auth);
 
     const toPatients = () => {
         navigate('pacientes');
+    }
+
+    const handleLogout = () => {
+        dispatch(startLogout());
     }
 
     return (
@@ -74,6 +81,22 @@ export const InicioPage = () => {
             <BackgroundCircle size="100px" color="#4db6ac" bottom="50px" right="50px" />
 
             <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1 }}>
+
+                <Tooltip title="Cerrar Sesión" placement="left">
+                    <IconButton
+                        onClick={handleLogout}
+                        sx={{
+                            backgroundColor: 'white',
+                            boxShadow: '0 2px 2px 2px rgb(219, 219, 219)',
+                            position: "fixed",
+                            top: 25,
+                            right: 25,
+                        }}
+                    >
+                        <Logout />
+                    </IconButton>
+                </Tooltip>
+
                 <Box
                     sx={{
                         display: 'flex',

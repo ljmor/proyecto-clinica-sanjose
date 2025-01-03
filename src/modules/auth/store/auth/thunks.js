@@ -1,13 +1,11 @@
-import { onChecking, onLogin } from "./authSlice";
+import { appLogout } from "../../../historias_clinicas/store/historySlice";
+import { onChecking, onLogin, onLogout } from "./authSlice";
 
 export const startLogin = ({ email, password }) => {
 
     return async (dispatch) => {
 
         dispatch(onChecking());
-
-        // Proceso asyncrono para obtener los datos
-        console.log(`Email: ${email} --- Password: ${password}`);
         
         // Simulacion de datos obtenidos desde API
         const result = {
@@ -17,17 +15,23 @@ export const startLogin = ({ email, password }) => {
                 nombres: 'Luis Mora',
                 cedula: '11032035',
                 email: 'johndoe@example.com',
-                rol: 'doctor',
-                profile_image: 'dsf'
+                rol: 'admin',  // doctor, nurse, patient, admin, reception
             }
         }
 
         // Si hay un error
-        if (!result.ok) return dispatch(logout(result.errorMessage));
+        // if (!result.ok) return dispatch(logout(result.errorMessage));
 
         // Si todo sale bien
         dispatch(onLogin(result));
 
     }
 
+}
+
+export const startLogout = () => {
+    return async (dispatch) => {
+        dispatch(appLogout());
+        dispatch(onLogout());
+    }
 }

@@ -44,7 +44,10 @@ import {
     }, []);
   
     const { resp, onLoading, error } = useSelector((state) => state.history);
+    const { resp: authResp } = useSelector((state) => state.auth);
     const [filteredList, setFilteredList] = useState([]);
+
+    const estados = (authResp.user.rol === 'nurse') ? ["abierta", "enEspera"] : ["enEspera", "abierta", "cerrada"]
   
     useEffect(() => {
       if (resp.histories) {
@@ -134,7 +137,7 @@ import {
   
           <Grid2 container spacing={3}>
             <Grid2 item size={{ xs: 12, md: 9 }}>
-              {["enEspera", "abierta", "cerrada"].map((status) => (
+              {estados.map((status) => (
                 <Box key={status} sx={{ mb: 4 }}>
                   <Skeleton
                     variant="text"
@@ -178,7 +181,7 @@ import {
   
         <Grid2 container spacing={3}>
           <Grid2 item size={{ xs: 12, md: 9 }}>
-            {["enEspera", "abierta", "cerrada"].map((status) => (
+            {estados.map((status) => (
               <Box key={status} sx={{ mb: 4 }}>
                 <Typography
                   variant="h5"

@@ -53,11 +53,30 @@ const OptionsList = styled(motion.ul)({
   padding: 0,
   margin: "8px 0 0 0",
   borderRadius: "10px",
-  overflow: "hidden",
+  overflowY: "auto",
+  overflowX: "hidden",
+  maxHeight: "200px",
   boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
   fontFamily: "Arial",
   backgroundColor: "#ffffff",
+  scrollbarWidth: "thin", // Ancho del scroll en navegadores modernos
+  scrollbarColor: "#b2dfdb transparent", // Color del scroll y su fondo
+  "&::-webkit-scrollbar": {
+    width: "4px", // Ancho del scroll
+  },
+  "&::-webkit-scrollbar-thumb": {
+    background: "#b2dfdb", // Color del scroll
+    borderRadius: "10px", // Bordes redondeados para suavizar el diseño
+  },
+  "&::-webkit-scrollbar-thumb:hover": {
+    background: "#80cbc4", // Color en hover
+  },
+  "&::-webkit-scrollbar-track": {
+    background: "transparent", // Fondo del contenedor del scroll
+  },
 });
+
+
 
 const Option = styled(motion.li)({
   padding: "12px 16px",
@@ -71,12 +90,27 @@ const Option = styled(motion.li)({
 });
 
 const initOpts = [
-  "Ingreso Prehospitalario",
-  "Tratamiento Médico",
-  "Epicrisis",
-  "Amnanesis",
+  "Administración de medicamentos",
   "Admisión - AltaEgreso",
-  "Otro",
+  "Anamnesis",
+  "Atención inmediata al recién nacido",
+  "Consentimiento informado",
+  "Constantes vitales y balance hídrico",
+  "Cuidados post-anestésicos",
+  "Emergencia",
+  "Epicrisis",
+  "Evaluación psicológica inicial",
+  "Evolución y prescripciones",
+  "Informe de anatomía patológica",
+  "Informe de imagenología",
+  "Informe de laboratorio clínico",
+  "Pre-anestésico",
+  "Protocolo quirúrgico",
+  "Solicitud de anatomía patológica",
+  "Solicitud de imagenología",
+  "Solicitud de laboratorio clínico",
+  "Trans-anestésico",
+  "Tratamiento médico",
 ];
 
 const FormTypeModal = ({ open, onClose, onSubmit }) => {

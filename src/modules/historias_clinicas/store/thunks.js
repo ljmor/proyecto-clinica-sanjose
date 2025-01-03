@@ -2,6 +2,7 @@ import {
     getHistories,
     loadingOff,
     loadingOn,
+    setActiveForm,
     setActiveHistory,
     setError,
     updateHistory,
@@ -10,6 +11,12 @@ import {
   export const startSetActiveHistory = (activeHistory) => {
     return async (dispatch) => {
       dispatch(setActiveHistory(activeHistory));
+    };
+  };
+
+  export const startSetActiveForm = (activeForm) => {
+    return async (dispatch) => {
+      dispatch(setActiveForm(activeForm));
     };
   };
   
@@ -67,22 +74,8 @@ import {
                   autor: "Dr. Pete Rodriguez",
                   fecha_creacion: "2024-01-01",
                   fecha_ult_mod: "2024-01-01",
-                  archivo: "archivoExcel",
-                },
-                {
-                  nombre: "Tratamiento Médico.xlsx",
-                  autor: "Dr. Pete Rodriguez",
-                  fecha_creacion: "2024-01-18",
-                  fecha_ult_mod: "2024-01-18",
-                  archivo: "archivoExcel",
-                },
-                {
-                  nombre: "Resultados oncologicos.xlsx",
-                  autor: "Dr. Luis Bolaños",
-                  fecha_creacion: "2024-01-10",
-                  fecha_ult_mod: "2024-01-10",
-                  archivo: "archivoExcel",
-                },
+                  archivo: "UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA==",
+                }
               ],
             },
             {
@@ -94,19 +87,12 @@ import {
               estado: "enEspera",
               formularios: [
                 {
-                  nombre: "Epicrisis.xlsx",
+                  nombre: "Ingreso Prehospitalario.xlsx", // Nombre o tipo es lo mismo
                   autor: "Dr. Pete Rodriguez",
-                  fecha_creacion: "2024-01-20",
-                  fecha_ult_mod: "2024-01-20",
-                  archivo: "ruta",
-                },
-                {
-                  nombre: "Resultados oncologicos.xlsx",
-                  autor: "Dr. Luis Bolaños",
-                  fecha_creacion: "2024-01-10",
-                  fecha_ult_mod: "2024-01-10",
-                  archivo: "ruta",
-                },
+                  fecha_creacion: "2024-01-01",
+                  fecha_ult_mod: "2024-01-01",
+                  archivo: "UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA==",
+                }
               ],
             },
             {

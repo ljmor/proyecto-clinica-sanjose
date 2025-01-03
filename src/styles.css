@@ -7,7 +7,3 @@ body {
   font-family: 'Poppins';
 }
 
-.adminlayout {
-  background-color: #F8F8F8;
-  height: calc(100% - 65px);
-}

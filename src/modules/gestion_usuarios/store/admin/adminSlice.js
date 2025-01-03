@@ -3,9 +3,9 @@ import { createSlice } from '@reduxjs/toolkit';
 export const adminSlice = createSlice({
     name: 'admin',
     initialState: {
-        resp: {}, // { ok: true/false, list: [registers], type: 'doctors, nurses, patients ' }
+        resp: {}, // { ok: true/false, results: [registers], type: 'doctors, nurses, patients ' }
         isLoading: true,
-        activeRegister: {}
+        activeRegister: {},
     },
     reducers: {
         setActiveRegister: (state, { payload }) => {

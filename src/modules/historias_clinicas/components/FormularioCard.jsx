@@ -8,12 +8,23 @@ import {
   IconButton,
 } from "@mui/material";
 import { Download } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { startSetActiveForm } from "../store/thunks";
 
-const FormularioCard = ({ nombre, autor, fecha_ult_mod, fecha_creacion }) => {
+const FormularioCard = ({ nombre, autor, fecha_ult_mod, fecha_creacion, archivo }) => {
+
+
+  const { resp, activeHistory } = useSelector((state) => state.history);
+  const { resp: authResp } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const isSpecial = [
     "ingreso prehospitalario.xlsx",
     "tratamiento médico.xlsx",
     "epicrisis.xlsx",
+    "anamnesis.xlsx",
   ].includes(nombre.toLowerCase());
 
   const getSpecialColor = () => {
@@ -24,10 +35,51 @@ const FormularioCard = ({ nombre, autor, fecha_ult_mod, fecha_creacion }) => {
         return "#2196f3";
       case "epicrisis.xlsx":
         return "#ff9800";
+      case "anamnesis.xlsx":
+        return "#4232a8";
       default:
         return "#ffffff";
     }
   };
+
+  const handleDownload = () => {
+
+    // Decodificar Base64
+    const binaryString = atob(archivo);
+
+     // Convertir a un Blob
+     const byteArray = new Uint8Array(binaryString.length);
+     for (let i = 0; i < binaryString.length; i++) {
+       byteArray[i] = binaryString.charCodeAt(i);
+     }
+     const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+ 
+     // Descargar el archivo
+     const url = URL.createObjectURL(blob);
+     const link = document.createElement('a');
+     link.href = url;
+     link.download = `${resp.patient.cedula}_${resp.patient.nombres.replace(/\s+/g, '')}_${nombre}`;
+     document.body.appendChild(link);
+     link.click();
+     document.body.removeChild(link);
+  }
+
+  const handleView = () => {
+
+    dispatch(startSetActiveForm({ nombre, autor, fecha_ult_mod, fecha_creacion, archivo }));
+
+    if (activeHistory.estado === "cerrada-editable" || activeHistory.estado === "abierta" && authResp.user.rol === "doctor") {
+      navigate("formulario", {
+        state: { accion: "editar", tipo: nombre.replace(".xlsx", "") },
+      });
+      return;
+      
+    }
+
+    navigate("formulario", {
+      state: { accion: "ver", tipo: nombre },
+    });
+  }
 
   return (
     <Paper
@@ -46,14 +98,14 @@ const FormularioCard = ({ nombre, autor, fecha_ult_mod, fecha_creacion }) => {
         },
         "&::before": isSpecial
           ? {
-              content: '""',
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              height: "6px",
-              backgroundColor: getSpecialColor(),
-            }
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "6px",
+            backgroundColor: getSpecialColor(),
+          }
           : {},
         "&::after": {
           content: '""',
@@ -96,6 +148,7 @@ const FormularioCard = ({ nombre, autor, fecha_ult_mod, fecha_creacion }) => {
       />
       <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
         <IconButton
+          onClick={handleDownload}
           size="small"
           sx={{
             mr: "7px",
@@ -108,6 +161,7 @@ const FormularioCard = ({ nombre, autor, fecha_ult_mod, fecha_creacion }) => {
         <Button
           size="small"
           variant="contained"
+          onClick={handleView}
           sx={{
             borderRadius: "7px",
             textTransform: "capitalize",

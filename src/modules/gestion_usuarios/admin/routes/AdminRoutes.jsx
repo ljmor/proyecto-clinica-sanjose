@@ -1,22 +1,27 @@
-import { Navigate, Route, Routes } from "react-router-dom"
-import { AdminLayout } from "../AdminLayout"
-import { DoctorsView } from "../views/DoctorsView"
-import { CreateDoctor } from "../pages/CreateDoctor"
-import ProfileView from "../pages/ProfileView"
-import EditableProfile from "../pages/EditableProfile"
+import { Navigate, Route, Routes, Outlet } from "react-router-dom";
+import { AdminLayout } from "../AdminLayout";
+import { DoctorsView } from "../views/DoctorsView";
+import { CreateDoctor } from "../pages/CreateDoctor";
+import { NursesView } from "../views/NursesView";
+import { useSelector } from "react-redux";
+import { EscogerOpcion } from "../components/EscogerOpcion";
 
 export const AdminRoutes = () => {
+  const { resp } = useSelector((state) => state.admin);
 
-    // ADAPTAR PARA QUE FUNCIONE SEGÚN EL TIPO DE USUARIO CON EL QUE INTERACTUAR (JUGAR CON EL ADMINSLICE)
+  return (
+    <Routes>
+      {/* Ruta base con AdminLayout */}
+      <Route path="/" element={<AdminLayout><Outlet /></AdminLayout>}>
+        {/* Rutas hijas */}
+        <Route index element={<EscogerOpcion/>} />
+        <Route path="medicos" element={<DoctorsView />} />
+        <Route path="medicos/crear" element={<CreateDoctor />} />
+        <Route path="enfermeria" element={<NursesView />} />
+      </Route>
 
-    return (
-        <Routes>
-            <Route path="/medicos/*" element={ <AdminLayout children={ <DoctorsView /> }/> } />
-            <Route path="/medicos/crear" element={ <AdminLayout children={ <CreateDoctor /> }/> } />
-            <Route path="/medicos/perfil" element={ <AdminLayout children={ <ProfileView /> }/> } />
-            <Route path="/medicos/perfil/editar" element={ <AdminLayout children={ <EditableProfile /> }/> } />
-
-            <Route path="/*" element={<Navigate to="medicos" />} />
-        </Routes>
-    )
-}
+      {/* Ruta para manejar no encontradas */}
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
+  );
+};

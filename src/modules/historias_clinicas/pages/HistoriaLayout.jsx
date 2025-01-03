@@ -40,7 +40,8 @@ export const HistoriaLayout = ({ children }) => {
         sx={{
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
+          alignItems: { xs: 'left', sm: 'center' },
+          flexDirection: { xs: "column", sm: "row" }, 
           mb: 4,
         }}
       >
@@ -51,6 +52,7 @@ export const HistoriaLayout = ({ children }) => {
           sx={{
             color: "black",
             borderColor: "black",
+            mb: { xs: 2, sm: 0 },
             "&:hover": {
               backgroundColor: "rgba(0, 0, 0, 0.04)",
               borderColor: "black",

@@ -39,16 +39,21 @@ export const historySlice = createSlice({
   initialState: {
     resp: {
       ok: false,
-      histories: [], // Inicializar como un arreglo vacío
+      histories: [], 
     },
     onLoading: true,
     activeHistory: {},
+    activeForm: {},
     error: "",
   },
 
   reducers: {
     setActiveHistory: (state, { payload }) => {
       state.activeHistory = payload;
+    },
+
+    setActiveForm: (state, { payload }) => {
+      state.activeForm = payload;
     },
 
     setError: (state, { payload }) => {
@@ -78,14 +83,23 @@ export const historySlice = createSlice({
 
       state.activeHistory = payload;
     },
+
+    appLogout: (state) => {
+      state.resp = {};
+      state.onLoading = true;
+      state.activeHistory = {};
+      state.error = "";
+    }
   },
 });
 
 export const {
   setActiveHistory,
+  setActiveForm,
   setError,
   loadingOn,
   loadingOff,
   getHistories,
   updateHistory,
+  appLogout,
 } = historySlice.actions;

@@ -1,18 +1,20 @@
-import React from 'react'
-import { SideBar } from './components/SideBar'
-import { NavBar } from './components/NavBar'
+import React from 'react';
+import { SideBar } from './components/SideBar';
 
 export const AdminLayout = ({ children }) => {
     return (
-        
-        <div className='adminlayout' style={{ fontFamily: 'Poppins' }} >
+        <div className="adminlayout">
             {/* NavBar */}
-            <NavBar/>
+            {/* <NavBar /> */}
+
             {/* SideBar */}
             <SideBar />
 
             {/* Main content */}
-            { children }
+
+            {/* Mostrar mensaje predeterminado si no hay hijos */}
+            {children}
+
         </div>
-    )
-}
+    );
+};

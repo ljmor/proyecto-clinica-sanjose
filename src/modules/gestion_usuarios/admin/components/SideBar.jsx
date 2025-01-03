@@ -11,44 +11,41 @@ import {
   useTheme,
   Box,
   Typography,
-  Alert,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { FaChartBar, FaUserMd, FaNotesMedical, FaUserInjured } from 'react-icons/fa';
-// import {img} from '../imgs/';
+import { FaUserMd, FaNotesMedical, FaUserInjured } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom'; 
+import { useDispatch, useSelector } from 'react-redux';
 
 const menuItems = [
-  { text: 'Estadísticas', icon: <FaChartBar /> },
-  { text: 'Médicos', icon: <FaUserMd /> },
-  { text: 'Enfermería', icon: <FaNotesMedical /> },
-  { text: 'Pacientes', icon: <FaUserInjured /> },
+  { text: 'Médicos', icon: <FaUserMd />, path: 'medicos' },
+  { text: 'Enfermería', icon: <FaNotesMedical />, path: 'enfermeria' },
+  { text: 'Pacientes', icon: <FaUserInjured />, path: 'pacientes' },
 ];
 
 export const SideBar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState('Médicos');
+  const { resp } = useSelector(state => state.auth);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const handleItemClick = (text) => {
-    if (text !== 'Médicos') {
-      alert('En construcción');
-    } else {
-      setSelectedItem(text);
-    }
+  const handleItemClick = (item) => {
+    setSelectedItem(item.text);
+    navigate(item.path); // Navega al path correspondiente
+
     if (isMobile) {
       setMobileOpen(false);
     }
   };
 
-  const onExit = () => {
-    // Implementar el cierre de sesión
-    location.reload();
-  };
 
   const drawerContent = (
     <Box
@@ -63,24 +60,30 @@ export const SideBar = () => {
       <Box
         component="img"
         sx={{
-            height: '130px',
-            width: '100px',
-            alignSelf: 'center',
-            margin: '10px 0',
-            justifySelf: 'center',
+          height: '130px',
+          width: '100px',
+          alignSelf: 'center',
+          margin: '10px 0 5px 0',
+          justifySelf: 'center',
         }}
         alt="Logo de la clínica San José"
-        // src="../imgs/logo2.png"
         src="/src/modules/gestion_usuarios/admin/imgs/logo2.png"
       />
-      <Divider sx={{ bgcolor: 'white', width: '80%', alignSelf: 'center' }} />
+
+      <Typography
+        textAlign='center'
+      >
+        Bienvenido, {resp.user.nombres}
+      </Typography>
+
+      <Divider sx={{ bgcolor: 'white', width: '80%', alignSelf: 'center', mb: 2, mt: 1 }} />
 
       <List sx={{ overflow: 'hidden' }}>
         {menuItems.map((item) => (
           <ListItem
             button
             key={item.text}
-            onClick={() => handleItemClick(item.text)}
+            onClick={() => handleItemClick(item)}
             sx={{
               bgcolor: selectedItem === item.text ? 'rgba(176, 205, 111, 0.15)' : 'transparent',
               '&:hover': {
@@ -94,20 +97,19 @@ export const SideBar = () => {
           </ListItem>
         ))}
       </List>
-
     </Box>
   );
 
   return (
     <>
-      <Box sx={{ display: 'flex', mt: '64px' }}>
+      <Box sx={{ display: 'flex' }}>
         {isMobile && (
           <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, ml: '10px', mt: '9px', position: 'fixed', top: 8, left: 8, zIndex: 1100 }}
+            sx={{ mr: 2, ml: '10px', mt: '5px', position: 'fixed', top: 0, left: 8, zIndex: 1100, bgcolor: 'white' }}
           >
             <MenuIcon />
           </IconButton>
@@ -145,4 +147,4 @@ export const SideBar = () => {
       </Box>
     </>
   );
-}
+};

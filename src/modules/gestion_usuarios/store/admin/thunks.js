@@ -20,9 +20,10 @@ export const startLoadingRegisters = (type) => {
                     const docs = {
                         ok: true,
                         results: [
-                            { id: 1, nombres: 'John Doe', email: 'johndoe@example.com', especialidad: 'Cardiologo', disponibilidad: 'Disponible', nropacientes: 10, cedula: '1321231', fechanac: '01/01/2004', contacto: '+5930320320', direccion: 'Av siempre viva' },
-                            { id: 2, nombres: 'John Doe 2', email: 'johndoe@example.com', especialidad: 'Cardiologo', disponibilidad: 'Disponible', nropacientes: 10, cedula: '1321231', fechanac: '01/01/2004', contacto: '+5930320320', direccion: 'Av siempre viva' },
-                            { id: 3, nombres: 'John Doe 3', email: 'johndoe@example.com', especialidad: 'Cardiologo', disponibilidad: 'Disponible', nropacientes: 10, cedula: '1321231', fechanac: '01/01/2004', contacto: '+5930320320', direccion: 'Av siempre viva' },
+                            { id: 1, nombres: 'John Doe', email: 'ljmo@example.com', especialidad: 'Cardiologia', cedula: '1321231', contacto: '+5930320320', registro: 'UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA==' },
+                            { id: 2, nombres: 'Andrez Gonzales', email: 'sxas@example.com', especialidad: 'Espc 2', cedula: '54986445', contacto: '+5930320320', registro: 'UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA==' },
+                            { id: 3, nombres: 'Jose Cango', email: 'johndoe@example.com', especialidad: 'Espc 2', cedula: '0654684', contacto: '+5930320320', registro: 'UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA==' },
+                            { id: 4, nombres: 'Jose Cango', email: 'johndoe@example.com', especialidad: 'Espc 2', cedula: '0654684', contacto: '+5930320320', registro: 'UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA==' },
                         ],
                         type: 'doctors'
                     }
@@ -38,9 +39,9 @@ export const startLoadingRegisters = (type) => {
                     const nurses = {
                         ok: true,
                         results: [
-                            { id: 4, nombres: 'Jose Granda', email: 'sample@example.com', cedula: '110546548648' },
-                            { id: 5, nombres: 'Ana Armijos', email: 'sample@example.com', cedula: '110546548648' },
-                            { id: 6, nombres: 'Luis Garcia', email: 'sample@example.com', cedula: '110546548648' },
+                            { id: 4, nombres: 'Jose Granda', email: 'sample@example.com', cedula: '110546548648', contacto: '+5930320320' },
+                            { id: 5, nombres: 'Ana Armijos', email: 'sample@example.com', cedula: '110546548648', contacto: '+5930320320' },
+                            { id: 6, nombres: 'Luis Garcia', email: 'sample@example.com', cedula: '110546548648', contacto: '+5930320320' },
                         ],
                         type: 'nurses'
                     }
@@ -53,31 +54,12 @@ export const startLoadingRegisters = (type) => {
                     // const { pats } = await api.get('/pats');
 
                     // Simulacion de datos para pruebas
-                    /* Datos de un paciente
-                    {
-                    id: ..,
-                    nombres: ..,
-                    cedula: ..,
-                    email: ..,
-                    fechanac:..,
-                    contactos: [ .., .. ],
-                    direccion:..,
-                    contactos_emerg: [ {..: ..}, {..: ..} ],
-                    tipo_sangre: ..,
-                    sexo: ..,
-                    fecha_ult_admision: ..,
-                    ... aun hay info por ver que tambien se debe agregar
-                    historias: [
-                        { id: .., nombredelformulario: .., archivo: archivodeexcel, fechacreacion: .., fecha_ult_mod: .., nroforms: .., estado: enEspera, abierta, cerrada }
-                    ]
-                    }
-                    */
                     const pats = {
                         ok: true,
                         results: [
                             { id: 7, nombres: 'Oliver Saraguro', email: 'johndoe@example.com', tipo_sangre: 'A+', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '1321231', fechanac: '01/01/2004', edad: '18' },
-                            { id: 8, nombres: 'Renato Rojas',    email: 'johndoe@example.com', tipo_sangre: 'A+', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '1321231', fechanac: '01/01/2004', edad: '18' },
-                            { id: 9, nombres: 'John Doe 3',      email: 'johndoe@example.com', tipo_sangre: 'A+', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '1321231', fechanac: '01/01/2004', edad: '18' },
+                            { id: 8, nombres: 'Renato Rojas', email: 'johndoe@example.com', tipo_sangre: 'A+', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '1321231', fechanac: '01/01/2004', edad: '18' },
+                            { id: 9, nombres: 'John Doe 3', email: 'johndoe@example.com', tipo_sangre: 'A+', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '1321231', fechanac: '01/01/2004', edad: '18' },
                         ],
                         type: 'patients'
                     }

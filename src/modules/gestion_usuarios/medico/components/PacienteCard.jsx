@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { ArrowForwardIos } from '@mui/icons-material';
 import { MdMedicalInformation } from 'react-icons/md';
 
-export const PacienteCard = ({ paciente }) => {
+export const PacienteCard = ({ paciente, disButton = false }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -77,6 +77,7 @@ export const PacienteCard = ({ paciente }) => {
         </Box>
         <IconButton
           onClick={onClickPaciente}
+          disabled={disButton}
           sx={{
             color: "#004d40",
             "&:hover": {

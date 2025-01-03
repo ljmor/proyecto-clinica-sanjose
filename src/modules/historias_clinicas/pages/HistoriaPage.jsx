@@ -27,9 +27,11 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { startUpdateHistory } from "../store/thunks";
 import { useDispatch } from "react-redux";
+import JSZip from "jszip";
 
 export const HistoriaPage = () => {
   const { activeHistory, resp } = useSelector((state) => state.history);
+  const { resp: authResp } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const history = activeHistory;
@@ -82,10 +84,10 @@ export const HistoriaPage = () => {
     // Ordenamiento opcional
     const sortedFiltered = ordenarpor
       ? [...filtered].sort((a, b) => {
-          const dateA = new Date(a.fecha_creacion);
-          const dateB = new Date(b.fecha_creacion);
-          return ordenarpor === "asc" ? dateA - dateB : dateB - dateA;
-        })
+        const dateA = new Date(a.fecha_creacion);
+        const dateB = new Date(b.fecha_creacion);
+        return ordenarpor === "asc" ? dateA - dateB : dateB - dateA;
+      })
       : filtered;
 
     setFilteredList(sortedFiltered);
@@ -96,15 +98,17 @@ export const HistoriaPage = () => {
       .filter((form) =>
         tipo === "esenciales"
           ? [
-              "Ingreso Prehospitalario.xlsx",
-              "Tratamiento Médico.xlsx",
-              "Epicrisis.xlsx",
-            ].includes(form.nombre)
+            "Ingreso Prehospitalario.xlsx",
+            "Tratamiento médico.xlsx",
+            "Epicrisis.xlsx",
+            "Anamnesis.xlsx",
+          ].includes(form.nombre)
           : ![
-              "Ingreso Prehospitalario.xlsx",
-              "Tratamiento Médico.xlsx",
-              "Epicrisis.xlsx",
-            ].includes(form.nombre)
+            "Ingreso Prehospitalario.xlsx",
+            "Tratamiento médico.xlsx",
+            "Epicrisis.xlsx",
+            "Anamnesis.xlsx",
+          ].includes(form.nombre)
       )
       .map((form, index) => (
         <Grid2
@@ -145,9 +149,10 @@ export const HistoriaPage = () => {
       return;
     }
 
-    // Generar fecha en formato yyyy-mm-dd
+    // Generar fecha en formato yyyy-mm-dd 
     const getFormattedDate = () => {
       const date = new Date();
+      date.setDate(date.getDate() - 1); 
       return date.toISOString().split("T")[0];
     };
 
@@ -177,7 +182,7 @@ export const HistoriaPage = () => {
         dispatch(startUpdateHistory(history));
 
         navigate("formulario", {
-          state: { accion: "crear", tipo: "Amnanesis" },
+          state: { accion: "crear", tipo: "Anamnesis" },
         });
       }
     });
@@ -201,9 +206,10 @@ export const HistoriaPage = () => {
       return;
     }
 
-    // Generar fecha en formato yyyy-mm-dd
+    // Generar fecha en formato yyyy-mm-dd 
     const getFormattedDate = () => {
       const date = new Date();
+      date.setDate(date.getDate() - 1); 
       return date.toISOString().split("T")[0];
     };
 
@@ -238,6 +244,30 @@ export const HistoriaPage = () => {
 
   // DESCARGAR Todos los formularios en una historia
   const handleDownloadAll = () => {
+    // Crear una nueva instancia de JSZip
+    const zip = new JSZip();
+
+    // Agregar los archivos al ZIP
+    activeHistory.formularios.forEach((formulario) => {
+      const archivoBinario = atob(formulario.archivo); // Decodificar Base64
+      const buffer = new Uint8Array(archivoBinario.length);
+      for (let i = 0; i < archivoBinario.length; i++) {
+        buffer[i] = archivoBinario.charCodeAt(i);
+      }
+
+      // Agregar el archivo al ZIP
+      zip.file(`${resp.patient.cedula}_${resp.patient.nombres.replace(/\s+/g, '')}_${formulario.nombre}`, buffer);
+    });
+
+    // Generar el archivo ZIP
+    zip.generateAsync({ type: "blob" }).then((zipContent) => {
+      // Crear un enlace para descargar el archivo ZIP
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(zipContent);
+      link.download = `HistoriaClinica_${resp.patient.cedula}_${resp.patient.nombres.replace(/\s+/g, '')}.zip`;
+      link.click();
+    });
+
     setSnackbarOpen(true); // Abre el Snackbar
   };
 
@@ -286,7 +316,7 @@ export const HistoriaPage = () => {
       name: "ABRIR HISTORIA",
       disabled: ["cerrada", "abierta", "cerrada-editable"].includes(
         history.estado
-      ),
+      ) || authResp.user.rol === "patient" || authResp.user.rol === "nurse",
       onClick: handleOpenHistory, // Llama directamente a una función
     },
     {
@@ -296,11 +326,11 @@ export const HistoriaPage = () => {
         ["abierta", "enEspera", "cerrada-editable"].includes(history.estado) ||
         (history.estado === "cerrada" &&
           new Date() >
-            new Date(
-              new Date(history.fecha_ult_mod).setDate(
-                new Date(history.fecha_ult_mod).getDate() + 1
-              )
-            )),
+          new Date(
+            new Date(history.fecha_ult_mod).setDate(
+              new Date(history.fecha_ult_mod).getDate() + 1
+            )
+          )) || authResp.user.rol === "patient" || authResp.user.rol === "nurse",
       onClick: handleEdition,
     },
     {
@@ -308,7 +338,7 @@ export const HistoriaPage = () => {
       name: "CERRAR HISTORIA",
       disabled: ["enEspera", "cerrada", "cerrada-editable"].includes(
         history.estado
-      ),
+      ) || authResp.user.rol === "patient" || authResp.user.rol === "nurse",
       onClick: handleCloseHistory,
     },
   ];

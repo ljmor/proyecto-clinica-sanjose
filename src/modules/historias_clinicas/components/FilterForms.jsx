@@ -70,15 +70,27 @@ const FilterForms = ({ onFilter }) => {
           }}
         >
           <MenuItem value="">Todos</MenuItem>
-          <MenuItem value="Ingreso Prehospitalario.xlsx">
-            Ingreso Prehospitalario
-          </MenuItem>
-          <MenuItem value="Tratamiento Médico.xlsx">
-            Tratamiento Médico
-          </MenuItem>
+          <MenuItem value="Administración de medicamentos.xlsx">Administración de medicamentos</MenuItem>
+          <MenuItem value="Admisión - AltaEgreso.xlsx">Admisión - AltaEgreso</MenuItem>
+          <MenuItem value="Anamnesis.xlsx">Anamnesis</MenuItem>
+          <MenuItem value="Atención inmediata al recién nacido.xlsx">Atención inmediata al recién nacido</MenuItem>
+          <MenuItem value="Consentimiento informado.xlsx">Consentimiento informado</MenuItem>
+          <MenuItem value="Constantes vitales y balance hídrico.xlsx">Constantes vitales y balance hídrico</MenuItem>
+          <MenuItem value="Cuidados post-anestésicos.xlsx">Cuidados post-anestésicos</MenuItem>
+          <MenuItem value="Emergencia.xlsx">Emergencia</MenuItem>
           <MenuItem value="Epicrisis.xlsx">Epicrisis</MenuItem>
-          <MenuItem value="Amnanesis.xlsx">Amnanesis</MenuItem>
-          <MenuItem value="otros">Otros</MenuItem>
+          <MenuItem value="Evaluación psicológica inicial.xlsx">Evaluación psicológica inicial</MenuItem>
+          <MenuItem value="Evolución y prescripciones.xlsx">Evolución y prescripciones</MenuItem>
+          <MenuItem value="Informe de anatomía patológica.xlsx">Informe de anatomía patológica</MenuItem>
+          <MenuItem value="Informe de imagenología.xlsx">Informe de imagenología</MenuItem>
+          <MenuItem value="Informe de laboratorio clínico.xlsx">Informe de laboratorio clínico</MenuItem>
+          <MenuItem value="Pre-anestésico.xlsx">Pre-anestésico</MenuItem>
+          <MenuItem value="Protocolo quirúrgico.xlsx">Protocolo quirúrgico</MenuItem>
+          <MenuItem value="Solicitud de anatomía patológica.xlsx">Solicitud de anatomía patológica</MenuItem>
+          <MenuItem value="Solicitud de imagenología.xlsx">Solicitud de imagenología</MenuItem>
+          <MenuItem value="Solicitud de laboratorio clínico.xlsx">Solicitud de laboratorio clínico</MenuItem>
+          <MenuItem value="Trans-anestésico.xlsx">Trans-anestésico</MenuItem>
+          <MenuItem value="Tratamiento médico.xlsx">Tratamiento médico</MenuItem>
         </TextField>
 
         <TextField

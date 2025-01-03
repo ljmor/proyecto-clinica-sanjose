@@ -1,54 +1,131 @@
-import React from 'react';
-import { TableRow, TableCell, IconButton } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import React, { useEffect, useState } from 'react';
+import { TableRow, TableCell, IconButton, Button, Tooltip } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { startDeleteRegister, startSetActiveRegister } from '../../store/admin/thunks';
-import { useNavigate } from 'react-router-dom';
-import { changeUIStatus } from '../../../../store_general/ui/uiSlice';
+import Swal from 'sweetalert2';
+import { Edit } from '@mui/icons-material';
+import UserEditModal from './UserEditModal';
+import UserEditForm from './UserEditForm';
 
-export const ListItem = ({ id, nombres, especialidad, cedula, contacto, doctor, email, npacientes, disponibilidad }) => {
+export const ListItem = ({ id, nombres, especialidad = '', cedula, contacto, user, email, registro = '' }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [openModal, setOpenModal] = useState(false);
+  const { resp } = useSelector(state => state.admin);
 
   const handleSelectItem = () => {
-    dispatch(startSetActiveRegister(doctor));
-    dispatch(changeUIStatus('below'))
-    navigate('perfil');
+    dispatch(startSetActiveRegister(user));
+    setOpenModal(true);
+  }
+
+  const handleCloseModal = (close) => {
+    if (close) {
+      setOpenModal(false);
+    }
   }
 
   const handleDeleteItem = () => {
-    dispatch(startDeleteRegister(id));
+    Swal.fire({
+      title: "Eliminar Registro",
+      text: "Estas a punto de eliminar permanentemente el registro de la base de datos, esta acción no se puede revertir",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ELIMINAR",
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "¡Eliminado!",
+          text: "El usuario ha sido eliminado del sistema con éxito",
+          icon: "success"
+        });
+        dispatch(startDeleteRegister(id));
+      }
+    });
+  }
+
+  const handleDownloadRegister = () => {
+    // Decodificar Base64
+    const binaryString = atob(registro);
+
+    // Convertir a un Blob
+    const byteArray = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      byteArray[i] = binaryString.charCodeAt(i);
+    }
+    const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    // Descargar el archivo
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Registro_Senescyt_${nombres.replace(/\s+/g, '')}_${cedula}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   return (
-    <TableRow>
-      <TableCell>{id}</TableCell>
-      <TableCell>{nombres}</TableCell>
-      <TableCell>{especialidad}</TableCell>
-      <TableCell>{cedula}</TableCell>
-      <TableCell>{email}</TableCell>
-      <TableCell>{disponibilidad}</TableCell>
-      <TableCell>{npacientes}</TableCell>
-      <TableCell>{contacto}</TableCell>
-      <TableCell>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <IconButton 
-            size="small" 
-            color="primary" 
-            onClick={handleSelectItem}
-          >
-            <ArrowForwardIcon />
-          </IconButton>
-          <IconButton 
-            size="small" 
-            color="error" 
-            onClick={handleDeleteItem}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </div>
-      </TableCell>
-    </TableRow>
+    <>
+      <TableRow>
+        <TableCell>{id}</TableCell>
+        <TableCell>{nombres}</TableCell>
+        {
+          (especialidad !== '') && <TableCell>{especialidad}</TableCell>
+        }
+        <TableCell>{cedula}</TableCell>
+        <TableCell>{email}</TableCell>
+        <TableCell>{contacto}</TableCell>
+        {
+          (registro !== '') &&
+          <TableCell>
+            <Button
+              variant='outlined'
+              sx={{
+                color: '#25803e',
+                borderColor: '#25803e'
+              }}
+              onClick={handleDownloadRegister}
+            >
+              Descargar
+            </Button>
+          </TableCell>
+        }
+
+        <TableCell>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <Tooltip title="Editar datos" placement='top'>
+              <IconButton
+                size="small"
+                color="primary"
+                onClick={handleSelectItem}
+              >
+                <Edit />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Eliminar usuario" placement='top'>
+              <IconButton
+                size="small"
+                color="error"
+                onClick={handleDeleteItem}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
+        </TableCell>
+        
+      </TableRow>
+      <UserEditModal
+        open={openModal}
+        onClose={handleCloseModal}
+        title={`Editar Usuario: ${nombres}`}
+      >
+        <UserEditForm onClose={handleCloseModal} />
+      </UserEditModal>
+    </>
   );
 };
+

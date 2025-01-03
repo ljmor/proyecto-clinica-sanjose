@@ -17,14 +17,15 @@ import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { write } from "xlsx";
-import { startUpdateHistory } from "../store/thunks";
+import { startSetActiveForm, startUpdateHistory } from "../store/thunks";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const FormularioPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { activeHistory } = useSelector((state) => state.history);
+  const { activeHistory, activeForm, resp } = useSelector((state) => state.history);
+  const { resp: authResp } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { accion, tipo } = location.state || {};
   const [rowData, setRowData] = useState([]);
@@ -46,14 +47,26 @@ const FormularioPage = () => {
     setIsLoading(true); // Activar carga
 
     try {
-      const fileName =
-        accion === "crear"
-          ? `/formsExcelTemplates/${tipo}.xlsx`
-          : "/exampleFilledForm.xlsx";
-      const response = await fetch(fileName);
-      if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
-      const arrayBuffer = await response.arrayBuffer();
+      let arrayBuffer;
+
+      if (accion === "crear") {
+        const fileName = `/formsExcelTemplates/${tipo}.xlsx`;
+        const response = await fetch(fileName);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        arrayBuffer = await response.arrayBuffer();
+      } else {
+        // Leer desde Base64
+        const base64 = activeForm.archivo;
+        if (!base64) throw new Error("No se encontró el archivo en Base64");
+
+        // Decodificar Base64 a ArrayBuffer
+        const binaryString = atob(base64);
+        arrayBuffer = new ArrayBuffer(binaryString.length);
+        const bufferView = new Uint8Array(arrayBuffer);
+        for (let i = 0; i < binaryString.length; i++) {
+          bufferView[i] = binaryString.charCodeAt(i);
+        }
+      }
 
       // Leer el archivo Excel con todas las opciones de formato
       const workbook = read(arrayBuffer, {
@@ -98,7 +111,7 @@ const FormularioPage = () => {
         editable: accion !== "ver", // Hacer que las celdas sean editables solo si la acción no es "ver"
         resizable: true, // Hacer que las columnas sean redimensionables
         flex: 1, // Usar flex para ajustar automáticamente el ancho
-        minWidth: columnWidths[index] || 100, // Usar el ancho de la columna original si está definido, o un valor por defecto
+        minWidth: columnWidths[index] || 275 / 7.5, // Usar el ancho de la columna original si está definido, o un valor por defecto
         cellStyle: (params) => {
           // Obtener el estilo de la celda original
           const rowIndex = params.node.rowIndex + 1; // +1 porque la primera fila son headers
@@ -131,8 +144,15 @@ const FormularioPage = () => {
     }
   };
 
+
   // Guardar en BD
-  const handleSave = () => {
+  const handleSave = async () => {
+
+    // Simular enter para finalizar cualquier edición pendiente
+    if (gridRef.current && gridRef.current.api) {
+      gridRef.current.api.stopEditing();
+    }
+
     const rowData = [];
     gridRef.current.api.forEachNode((node) => rowData.push(node.data));
 
@@ -145,15 +165,21 @@ const FormularioPage = () => {
     const workbook = utils.book_new();
     const worksheet = utils.aoa_to_sheet(worksheetData);
 
+    // Asignar los anchos de las columnas
+    worksheet['!cols'] = columnDefs.map((col) => ({
+      width: 275 / 7.5, // Convertir el ancho de pixeles a ancho de Excel
+    }));
+
     workbook.SheetNames.push("Sheet1");
     workbook.Sheets["Sheet1"] = worksheet;
 
     // Generar el archivo como base64
     const archivoBase64 = write(workbook, { type: "base64" });
 
-    // Generar fecha en formato yyyy-mm-dd
+    // Generar fecha en formato yyyy-mm-dd 
     const getFormattedDate = () => {
       const date = new Date();
+      date.setDate(date.getDate() - 1);
       return date.toISOString().split("T")[0];
     };
 
@@ -162,26 +188,33 @@ const FormularioPage = () => {
       ...activeHistory,
       nroforms: activeHistory.nroforms + 1,
       fecha_ult_mod: getFormattedDate(),
-      formularios: [
-        ...(activeHistory.formularios || []),
-        {
-          nombre: `${tipo}.xlsx`,
-          autor: "Dr. Pete Fernandez", // Se debe llamar desde el store de auth con los nombres del usuario
-          fecha_creacion: getFormattedDate(),
-          fecha_ult_mod: getFormattedDate(),
-          archivo: archivoBase64,
-        },
-      ],
+      formularios: (activeHistory.formularios || []).map((formulario) =>
+        formulario.nombre === `${tipo}.xlsx`
+          ? {
+            ...formulario,
+            autor: `Dr. ${authResp.user.nombres}`,
+            fecha_ult_mod: getFormattedDate(),
+            archivo: archivoBase64,
+          }
+          : formulario
+      ),
     };
+
+    // Si no existe, lo agregamos
+    if (!history.formularios.some((formulario) => formulario.nombre === `${tipo}.xlsx`)) {
+      history.formularios.push({
+        nombre: `${tipo}.xlsx`,
+        autor: `Dr. ${authResp.user.nombres}`,
+        fecha_creacion: getFormattedDate(),
+        fecha_ult_mod: getFormattedDate(),
+        archivo: archivoBase64,
+      });
+    }
+
 
     // Llamar al thunk para actualizar el store
     dispatch(startUpdateHistory(history));
 
-    Swal.fire({
-      title: "¡Éxito!",
-      text: `El formulario de tipo ${tipo} ha sido registrado exitosamente`,
-      icon: "success",
-    });
 
     Swal.fire({
       title: "¡Éxito!",
@@ -197,7 +230,10 @@ const FormularioPage = () => {
   };
 
   const handleSaveAndDownload = () => {
-    handleSave(); // Llamar a la función de guardar primero
+
+    if (gridRef.current && gridRef.current.api) {
+      gridRef.current.api.stopEditing();
+    }
 
     const rowData = [];
     gridRef.current.api.forEachNode((node) => rowData.push(node.data));
@@ -211,13 +247,109 @@ const FormularioPage = () => {
     const workbook = utils.book_new();
     const worksheet = utils.aoa_to_sheet(worksheetData);
 
-    // Mantener los anchos de columna al guardar
-    worksheet["!cols"] = columnDefs.map((col) => ({
-      width: col.width,
+    // Asignar los anchos de las columnas
+    worksheet['!cols'] = columnDefs.map((col) => ({
+      width: 275 / 7.5, // Convertir el ancho de pixeles a ancho de Excel
     }));
 
-    utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    writeFile(workbook, `${tipo}_formulario.xlsx`);
+    workbook.SheetNames.push("Sheet1");
+    workbook.Sheets["Sheet1"] = worksheet;
+
+    // Generar el archivo como base64
+    const archivoBase64 = write(workbook, { type: "base64" });
+
+    // Generar fecha en formato yyyy-mm-dd 
+    const getFormattedDate = () => {
+      const date = new Date();
+      date.setDate(date.getDate() - 1);
+      return date.toISOString().split("T")[0];
+    };
+
+    // Historia actualizada
+    const history = {
+      ...activeHistory,
+      nroforms: activeHistory.nroforms + 1,
+      fecha_ult_mod: getFormattedDate(),
+      formularios: (activeHistory.formularios || []).map((formulario) =>
+        formulario.nombre === `${tipo}.xlsx`
+          ? {
+            ...formulario,
+            autor: `Dr. ${authResp.user.nombres}`,
+            fecha_ult_mod: getFormattedDate(),
+            archivo: archivoBase64,
+          }
+          : formulario
+      ),
+    };
+
+    // Si no existe, lo agregamos
+    if (!history.formularios.some((formulario) => formulario.nombre === `${tipo}.xlsx`)) {
+      history.formularios.push({
+        nombre: `${tipo}.xlsx`,
+        autor: `Dr. ${authResp.user.nombres}`,
+        fecha_creacion: getFormattedDate(),
+        fecha_ult_mod: getFormattedDate(),
+        archivo: archivoBase64,
+      });
+    }
+
+
+    // Llamar al thunk para actualizar el store
+    dispatch(startUpdateHistory(history));
+
+
+    // Decodificar Base64
+    const binaryString = atob(archivoBase64);
+
+    // Convertir a un Blob
+    const byteArray = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      byteArray[i] = binaryString.charCodeAt(i);
+    }
+    const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    // Descargar el archivo
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${resp.patient.cedula}_${resp.patient.nombres.replace(/\s+/g, '')}_${tipo}.xlsx`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    Swal.fire({
+      title: "¡Éxito!",
+      text: `El formulario de tipo ${tipo} ha sido registrado exitosamente`,
+      icon: "success",
+      showCancelButton: false,
+      confirmButtonText: "Ok",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate(-1);
+      }
+    });
+  };
+
+  const download = () => {
+
+    // Decodificar Base64
+    const binaryString = atob(activeForm.archivo);
+
+    // Convertir a un Blob
+    const byteArray = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      byteArray[i] = binaryString.charCodeAt(i);
+    }
+    const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    // Descargar el archivo
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${resp.patient.cedula}_${resp.patient.nombres.replace(/\s+/g, '')}_${tipo}.xlsx`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const toggleFullscreen = () => {
@@ -257,8 +389,8 @@ const FormularioPage = () => {
               {accion === "crear"
                 ? "Crear Formulario"
                 : accion === "editar"
-                ? "Editar Formulario"
-                : "Ver Formulario"}
+                  ? "Editar Formulario"
+                  : "Ver Formulario"}
             </Typography>
             <Typography variant="subtitle1" sx={{ color: "#00695c" }}>
               {accion === "crear"
@@ -274,11 +406,16 @@ const FormularioPage = () => {
             sx={{
               color: "#004d40",
               borderColor: "#004d40",
+              ml: 2,
               "&:hover": { backgroundColor: "rgba(0, 77, 64, 0.04)" },
+              "& .button-text": {
+                display: { xs: "none", sm: "inline" }, // Oculta el texto en xs (móviles), lo muestra en sm o mayor
+              },
             }}
           >
-            Pantalla completa
+            <span className="button-text">Pantalla completa</span>
           </Button>
+
         </Box>
 
         {error && (
@@ -373,6 +510,20 @@ const FormularioPage = () => {
               Guardar y Descargar
             </Button>
           </Box>
+        )}
+
+        {accion === "ver" && (
+          <Button
+            variant="contained"
+            disabled={isLoading}
+            onClick={download}
+            sx={{
+              backgroundColor: "#004d40",
+              "&:hover": { backgroundColor: "#00695c" },
+            }}
+          >
+            Descargar
+          </Button>
         )}
       </motion.div>
     </Container>

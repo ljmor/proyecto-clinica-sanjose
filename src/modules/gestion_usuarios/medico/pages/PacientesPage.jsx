@@ -3,31 +3,58 @@ import {
   Box,
   Typography,
   Container,
-  useMediaQuery,
   useTheme,
   Grid2,
   Divider,
+  Skeleton,
+  Fab,
+  Tooltip,
+  Modal,
+  TextField,
+  Button,
+  IconButton,
 } from "@mui/material";
 import { PacienteCard } from "../components/PacienteCard";
 import { FilterPacientes } from "../components/FilterPacientes";
+import { useDispatch, useSelector } from "react-redux";
+import { startAddDoctorPat, startLoadingDoctorPats, startLogoutApp, startSearchPat, startSetActiveRegister } from "../../store/medico/thunks";
+import { Add, Logout } from "@mui/icons-material";
+import { useForm } from "../../../../hooks/useForm";
+import Swal from "sweetalert2";
+import { startLogout } from "../../../auth/store/auth/thunks";
 
-const resp = {
-  results: [
-    { id: 7, nombres: 'Oliver Saraguro', email: 'johndoe@example.com', tipo_sangre: 'A+', sexo: 'Masculino', ult_adm: '2020-01-10', cedula: '56456465', fechanac: '01/01/2004', edad: '18' },
-    { id: 8, nombres: 'Renato Rojas', email: 'johndoe@example.com', tipo_sangre: 'AB+', sexo: 'Femenino', ult_adm: '2024-10-05', cedula: '1212213', fechanac: '01/01/2004', edad: '60' },
-    { id: 9, nombres: 'Juan García', email: 'johndoe@example.com', tipo_sangre: 'B-', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '1321231', fechanac: '01/01/2004', edad: '36' },
-  ],
-};
+const initForm = {
+  cedula: "",
+}
 
 export const PacientesPage = () => {
   const theme = useTheme();
-  const [filteredList, setFilteredList] = useState([]);
-  const originalData = resp.results || [];
-    
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    setFilteredList(originalData);
-  }, [originalData]);
-    
+    dispatch(startLoadingDoctorPats());
+  }, []);
+
+  const { resp, isLoading, activeRegister } = useSelector((state) => state.medico);
+
+  const { onInputChange, onResetForm, cedula } = useForm(initForm);
+  const [filteredList, setFilteredList] = useState([]);
+
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpenModal = () => {
+    dispatch(startSetActiveRegister({}));
+    setOpenModal(true)
+  };
+  const handleCloseModal = () => setOpenModal(false);
+
+  useEffect(() => {
+    if (resp.results) {
+      setFilteredList(resp.results);
+    }
+  }, [resp.results]);
+
+  const originalData = resp.results || [];
+
 
   const handleFilter = (filters) => {
     const { cedula, nombre, fechain, fechafin, sexo, edad, tipo_sangre } = filters;
@@ -51,6 +78,50 @@ export const PacientesPage = () => {
     setFilteredList(filtered);
   };
 
+  const handleSearchPat = (event) => {
+    event.preventDefault();
+
+    dispatch(startSearchPat(cedula));
+
+    onResetForm();
+  }
+
+  const handleAddPat = () => {
+
+    setOpenModal(false);
+
+    Swal.fire({
+      title: "Asignar Paciente",
+      text: `Estas a punto de asignarte el paciente con número de cedula ${activeRegister.cedula}, esta acción NO se puede revertir`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Asignar",
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "¡Asignado!",
+          text: `El paciente con numero de cédula ${activeRegister.cedula} se te ha asignado formalmente`,
+          icon: "success"
+        });
+
+        // Llamar al thunk para actualizar el store
+        dispatch(startAddDoctorPat());
+
+        // Limpiamos el activeRegister
+        dispatch(startSetActiveRegister({}));
+      } else {
+        // Limpiamos el activeRegister
+        dispatch(startSetActiveRegister({}));
+      }
+    });
+  };
+
+  const handleLogout = () => {
+    dispatch(startLogoutApp());
+    dispatch(startLogout());
+  }
+
   const renderCards = () =>
     filteredList
       .map((paciente) => (
@@ -59,7 +130,6 @@ export const PacientesPage = () => {
         </Grid2>
       ));
 
-  console.log(filteredList)
 
   return (
     <Box
@@ -108,9 +178,25 @@ export const PacientesPage = () => {
               <Typography variant="h5" sx={{ mb: 2, color: "#004d40", fontWeight: "bold" }}>
                 Mis Pacientes
               </Typography>
-              <Grid2 container spacing={3}>
-                {renderCards()}
-              </Grid2>
+              {
+                isLoading ? (
+                  <Box sx={{ my: 4 }} spacing={3} >
+                    {[...Array(4)].map((_, index) => (
+                      <Grid2 item xs={12} sm={6} md={4} key={index} m='10px' >
+                        <Skeleton variant="rectangular" width="100%" height={200} />
+                      </Grid2>
+                    ))}
+                  </Box>
+                ) : !resp.ok ? (
+                  <Box sx={{ my: 4 }}>
+                    Error al cargar los pacientes. Intente nuevamente. {resp.results}
+                  </Box>
+                ) : (
+                  <Grid2 container spacing={3}>
+                    {renderCards()}
+                  </Grid2>
+                )
+              }
             </Grid2>
 
             <Grid2
@@ -122,9 +208,163 @@ export const PacientesPage = () => {
                 <FilterPacientes onFilter={handleFilter} />
               </Box>
             </Grid2>
+
+            <Tooltip title="AÑADIR PACIENTE" placement="right">
+              <Fab
+                color="primary"
+                aria-label="add"
+                disabled={isLoading}
+                onClick={handleOpenModal}
+                sx={{
+                  position: "fixed",
+                  bottom: 25,
+                  left: 25,
+                  backgroundColor: "#004d40",
+                  "&:hover": {
+                    backgroundColor: "#00695c",
+                  },
+                }}
+              >
+                <Add />
+              </Fab>
+            </Tooltip>
+
+            <Tooltip title="Cerrar Sesión" placement="left">
+              <IconButton
+                onClick={handleLogout}
+                sx={{
+                  backgroundColor: 'white',
+                  boxShadow: '0 2px 2px 2px rgb(219, 219, 219)',
+                  position: "fixed",
+                  top: 25,
+                  right: 25,
+                }}
+              >
+                <Logout />
+              </IconButton>
+            </Tooltip>
+
           </Grid2>
         </Box>
       </Container>
+
+
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        sx={{
+          backdropFilter: "blur(10px)",
+        }}
+      >
+        <Box
+          component='form'
+          onSubmit={handleSearchPat}
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: { xs: 400, md: 600 },
+            height: 450,
+            bgcolor: 'background.paper',
+            borderRadius: '10px',
+            boxShadow: 24,
+            p: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Typography variant="h4" component="h4" fontWeight='bold' align="center" sx={{ color: '#004d40' }}>
+            Añadir Paciente
+          </Typography>
+          <Typography variant="subtitle1" align="center" sx={{ mt: 1, mb: 1 }}>
+            Ingresa el número de cédula del paciente que deseas asignarte.
+          </Typography>
+
+          <Box
+            display="flex"
+            justifyContent='center'
+            alignItems='end'
+            gap={3}
+          >
+            <TextField
+              label="Buscar por cédula"
+              variant="standard"
+              color="#004d40"
+              name="cedula"
+              value={cedula}
+              onChange={onInputChange}
+              fullWidth
+              sx={{
+                mt: 2,
+                width: '300px',
+                display: 'flex',
+              }}
+            />
+
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                color: "white",
+                display: "flex",
+                justifySelf: "end",
+                textTransform: "capitalize",
+                borderRadius: "20px",
+                borderColor: "black",
+                backgroundColor: "#098280",
+                "&:hover": {
+                  backgroundColor: "#24284C",
+                  borderColor: "black",
+                },
+              }}
+            >
+              Buscar
+            </Button>
+          </Box>
+
+          {
+            (activeRegister === 'Error, no se ha encontrado ese paciente')
+              ?
+              <Box mt={10} sx={{ backgroundColor: '#e0e0e0', width: '450px', height: '60px', display: 'flex', alignItems: 'center', px: 2, textAlign: 'left', color: 'error.main' }} >
+                {activeRegister}
+              </Box>
+              : (Object.keys(activeRegister).length === 0) ?
+                <Box mt={10} sx={{ backgroundColor: '#e0e0e0', width: '450px', height: '60px', display: 'flex', alignItems: 'center', px: 2, textAlign: 'left', color: '#595959' }} >
+                  Busca un paciente para empezar
+                </Box> :
+                <Box mt={5} >
+                  <PacienteCard paciente={activeRegister} disButton={true} />
+                </Box>
+          }
+
+
+          <Button
+            variant="contained"
+            onClick={handleAddPat}
+            disabled={activeRegister === 'Error, no se ha encontrado ese paciente' || Object.keys(activeRegister).length === 0}
+            sx={{
+              color: "white",
+              display: "flex",
+              position: 'fixed',
+              bottom: 25,
+              right: 25,
+              textTransform: "capitalize",
+              borderRadius: "5px",
+              borderColor: "black",
+              backgroundColor: "#24284C",
+              "&:hover": {
+                backgroundColor: "red",
+                borderColor: "black",
+              },
+            }}
+          >
+            Agregar
+          </Button>
+        </Box>
+      </Modal>
+
     </Box>
   );
 };

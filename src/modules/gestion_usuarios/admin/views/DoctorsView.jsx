@@ -12,12 +12,12 @@ import {
     TableRow,
     Typography,
 } from '@mui/material';
-import { Tune } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
 import { startLoadingRegisters } from '../../store/admin/thunks';
 import { useNavigate } from 'react-router-dom';
 import { ListItem } from '../components/ListItem';
+import { FilterRegisters } from '../components/FilterRegisters';
 
 const tableHeaders = [
     { name: 'ID' },
@@ -25,28 +25,67 @@ const tableHeaders = [
     { name: 'Especialidad' },
     { name: 'Cedula' },
     { name: 'Email' },
-    { name: 'Disponibilidad' },
-    { name: 'N° Pacientes' },
     { name: 'Contacto' },
+    { name: 'Registro Senescyt' },
 ];
 
 export const DoctorsView = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
-    const [doctors, setDoctors] = useState();
-    const { resp, isLoading, activeRegister } = useSelector(state => state.admin)
+    const [doctors, setDoctors] = useState([]);
+    const [originalDoctors, setOriginalDoctors] = useState([]); // Nuevo estado para mantener los datos originales
+
+    const { resp, isLoading, activeRegister } = useSelector(state => state.admin);
 
     useEffect(() => {
         dispatch(startLoadingRegisters('doctors'));
-    }, [])
+    }, [dispatch]);
 
+    // Actualiza los doctores solo cuando resp.results cambia
     useEffect(() => {
-        setDoctors(resp.results)
-    }, [resp.results])
+        if (resp?.results) {
+            setDoctors(resp.results);
+            setOriginalDoctors(resp.results); // Guarda una copia de los datos originales
+        }
+    }, [resp.results]);
 
     const handleAdd = () => {
-        navigate('crear')
+        navigate('crear');
+    };
+
+    // MANEJO DE FILTRADO
+    const handleFilter = (especialidad, cedula, nombres, email, ordenarpor) => {
+        // Siempre filtra desde los datos originales
+        const filtered = originalDoctors.filter((item) => {
+            // Banderas para cada condición de filtro
+            const matchesEspec = especialidad ? item.especialidad === especialidad : true;
+            const matchesCedula = cedula
+                ? item.cedula.trim().toLowerCase().includes(cedula.trim().toLowerCase())
+                : true;
+            const matchesNombres = nombres
+                ? item.nombres.trim().toLowerCase().includes(nombres.trim().toLowerCase())
+                : true;
+            const matchesEmail = email
+                ? item.email.trim().toLowerCase().includes(email.trim().toLowerCase())
+                : true;
+
+            // Verifica que todos los filtros coincidan
+            return matchesEspec && matchesNombres && matchesEmail && matchesCedula;
+        });
+
+        // Ordenamiento opcional
+        const sortedFiltered = ordenarpor
+            ? [...filtered].sort((a, b) => {
+                if (ordenarpor === "az") {
+                    return a.nombres.localeCompare(b.nombres); // Orden alfabético A-Z
+                } else {
+                    return b.nombres.localeCompare(a.nombres); // Orden alfabético Z-A
+                }
+            })
+            : filtered;
+
+        setDoctors(sortedFiltered);
     };
 
     return (
@@ -55,54 +94,42 @@ export const DoctorsView = () => {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                minHeight: '300px',
                 padding: '16px',
                 ml: { xs: '0', sm: '240px' },
-                flexDirection: 'column',
-                height: 'calc(100vh - 100px)'
+                mt: '35px',
+                flexDirection: { xs: 'column', xl: 'row' },
+                height: '100%',
+                overflowX: 'hidden',
             }}
         >
-            {/* Boton filtro */}
-            <Box sx={{ margin: { xs: '20px 10px', lg: '20px 190px' }, alignSelf: 'end' }} >
-                <Button
-                    sx={{
-                        width: '130px',
-                        height: '37px',
-                        color: '#fff',
-                        borderRadius: '44px',
-                        backgroundColor: '#098280',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        p: '0 20px',
-                        textTransform: 'capitalize',
-                        fontSize: '14px',
-                        fontWeight: '500px'
-                    }}
-                >
-                    Filtrar
-                    <Tune />
-                </Button>
-            </Box>
 
             {/* Listado */}
             <Paper
-                elevation={3}
+                className='animate__animated animate__fadeIn'
                 sx={{
-                    width: '90%',
-                    maxWidth: '1200px',
-                    height: '550px',
+                    width: { xs: '100%', xl: '1250px' },
+                    height: '720px',
                     borderRadius: '6px',
                     padding: { xs: '30px 16px', md: '35px 30px' },
+                    backgroundColor: '#F8F8F8',
                     boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
-                    mt: '15px',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
+                    margin: '0 auto 0 0'
                 }}
             >
-                <Box sx={{ width: '100%', overflow: 'auto' }}>
+                <Box
+                    sx={{
+                        width: '100%',
+                        height: '100%',
+                        overflow: 'auto',
+                        scrollbarWidth: 'thin', // Para navegadores como Firefox
+                        scrollbarColor: '##9e9e9e #F8F8F8', // Color del scrollbar y del track
+                    }}
+                >
+
                     <TableContainer>
                         {isLoading ? (
                             <Box
@@ -120,7 +147,7 @@ export const DoctorsView = () => {
                                         {tableHeaders.map((header, index) => (
                                             <TableCell
                                                 key={index}
-                                                align={index === tableHeaders.length - 1 ? 'center' : 'left'}
+                                                align={'left'}
                                             >
                                                 <Typography variant="subtitle2" fontWeight="bold">
                                                     {header.name}
@@ -140,9 +167,8 @@ export const DoctorsView = () => {
                                             cedula={doctor.cedula}
                                             contacto={doctor.contacto}
                                             email={doctor.email}
-                                            disponibilidad={doctor.disponibilidad}
-                                            npacientes={doctor.nropacientes}
-                                            doctor={doctor}
+                                            registro={doctor.registro}
+                                            user={doctor}
                                         />
                                     ))}
                                 </TableBody>
@@ -151,6 +177,9 @@ export const DoctorsView = () => {
                     </TableContainer>
                 </Box>
             </Paper>
+
+            {/* Filtro */}
+            <FilterRegisters onFilter={handleFilter} />
 
             {/* Añadir un nuevo registro */}
             <Box
