@@ -8,7 +8,7 @@ import { Edit } from '@mui/icons-material';
 import UserEditModal from './UserEditModal';
 import UserEditForm from './UserEditForm';
 
-export const ListItem = ({ id, nombres, especialidad = '', cedula, contacto, user, email, registro = '' }) => {
+export const ListItem = ({ id, nombres, especialidad = '', cedula, contacto, user, email, registro = '', tipo_sangre = '', edad = '', fechanac = '', sexo = '' }) => {
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const { resp } = useSelector(state => state.admin);
@@ -72,12 +72,14 @@ export const ListItem = ({ id, nombres, especialidad = '', cedula, contacto, use
       <TableRow>
         <TableCell>{id}</TableCell>
         <TableCell>{nombres}</TableCell>
-        {
-          (especialidad !== '') && <TableCell>{especialidad}</TableCell>
-        }
+        {(especialidad !== '') && (<TableCell>{especialidad}</TableCell>)}
+        {(tipo_sangre !== '') && (<TableCell>{tipo_sangre}</TableCell>)}
+        {(edad !== '') && (<TableCell>{edad}</TableCell>)}
+        {(fechanac !== '') && (<TableCell>{fechanac}</TableCell>)}
         <TableCell>{cedula}</TableCell>
         <TableCell>{email}</TableCell>
         <TableCell>{contacto}</TableCell>
+        {(sexo !== '') && (<TableCell>{sexo}</TableCell>)}
         {
           (registro !== '') &&
           <TableCell>
@@ -116,7 +118,7 @@ export const ListItem = ({ id, nombres, especialidad = '', cedula, contacto, use
             </Tooltip>
           </div>
         </TableCell>
-        
+
       </TableRow>
       <UserEditModal
         open={openModal}

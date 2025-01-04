@@ -183,26 +183,16 @@ const UserEditForm = ({ onClose }) => {
                     </Grid2>
                 )}
                 {formData.tipo_sangre !== undefined && (
-                    <Grid2 item size={{ xs: 12, sm: 6 }} >
-                        <FormControl fullWidth variant="outlined">
-                            <InputLabel>Tipo de Sangre</InputLabel>
-                            <Select
-                                name="tipo_sangre"
-                                value={formData.tipo_sangre || ''}
-                                onChange={handleChange}
-                                label="Tipo de Sangre"
-                            >
-                                <MenuItem value="A+">A+</MenuItem>
-                                <MenuItem value="A-">A-</MenuItem>
-                                <MenuItem value="B+">B+</MenuItem>
-                                <MenuItem value="B-">B-</MenuItem>
-                                <MenuItem value="AB+">AB+</MenuItem>
-                                <MenuItem value="AB-">AB-</MenuItem>
-                                <MenuItem value="O+">O+</MenuItem>
-                                <MenuItem value="O-">O-</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid2>
+                    <Grid2 item size={{ xs: 12, sm: 6 }}>
+                    <TextField
+                        fullWidth
+                        label="Tipo de Sangre"
+                        name="tipo_sangre"
+                        value={formData.tipo_sangre || ''}
+                        onChange={handleChange}
+                        variant="outlined"
+                    />
+                </Grid2>
                 )}
                 {formData.sexo !== undefined && (
                     <Grid2 item size={{ xs: 12, sm: 6 }}>
@@ -216,19 +206,18 @@ const UserEditForm = ({ onClose }) => {
                             >
                                 <MenuItem value="Masculino">Masculino</MenuItem>
                                 <MenuItem value="Femenino">Femenino</MenuItem>
-                                <MenuItem value="Otro">Otro</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid2>
                 )}
-                {formData.fecha_nac !== undefined && (
+                {formData.fechanac !== undefined && (
                     <Grid2 item size={{ xs: 12, sm: 6 }}>
                         <TextField
                             fullWidth
                             label="Fecha de Nacimiento"
-                            name="fecha_nac"
+                            name="fechanac"
                             type="date"
-                            value={formData.fecha_nac || ''}
+                            value={formData.fechanac || ''}
                             onChange={handleChange}
                             variant="outlined"
                             InputLabelProps={{

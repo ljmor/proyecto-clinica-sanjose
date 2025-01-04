@@ -7,3 +7,8 @@ body {
   font-family: 'Poppins';
 }
 
+/* styles.css o en tu archivo de estilos global */
+.swal2-container {
+  z-index: 9999 !important; /* Un valor muy alto para garantizar que sobresalga */
+}
+

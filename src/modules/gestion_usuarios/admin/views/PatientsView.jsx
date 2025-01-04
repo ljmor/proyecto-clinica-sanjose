@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
     Box,
     Button,
+    Grid2,
     IconButton,
     Paper,
     Table,
@@ -22,12 +23,16 @@ import { FilterRegisters } from '../components/FilterRegisters';
 const tableHeaders = [
     { name: 'ID' },
     { name: 'Nombres' },
+    { name: 'Tipo de Sangre' },
+    { name: 'Edad' },
+    { name: 'Fecha de naciemiento' },
     { name: 'Cedula' },
     { name: 'Email' },
     { name: 'Contacto' },
+    { name: 'Sexo' },
 ];
 
-export const NursesView = () => {
+export const PatientsView = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -37,7 +42,7 @@ export const NursesView = () => {
     const { resp, isLoading, activeRegister } = useSelector(state => state.admin);
 
     useEffect(() => {
-        dispatch(startLoadingRegisters('nurses'));
+        dispatch(startLoadingRegisters('patients'));
     }, [dispatch]);
 
     // Actualiza los useres solo cuando resp.results cambia
@@ -48,17 +53,31 @@ export const NursesView = () => {
         }
     }, [resp.results]);
 
-    const handleAdd = () => {
+    /* const handleAdd = () => {
         navigate('crear');
-    };
+    }; */
 
     // MANEJO DE FILTRADO
-    const handleFilter = ({ cedula, nombres, email, ordenarpor, contacto }) => {
+    const handleFilter = ({ cedula, nombres, email, tipo_sangre, fechain, fechafin, edad, contacto, ordenarpor, sexo }) => {
         // Siempre filtra desde los datos originales
         const filtered = originalusers.filter((item) => {
+
+            const itemDate = new Date(item.fechanac);
+            const startDate = fechain ? new Date(fechain) : null;
+            const endDate = fechafin ? new Date(fechafin) : null;
+
             // Banderas para cada condición de filtro
             const matchesCedula = cedula
                 ? item.cedula.trim().toLowerCase().includes(cedula.trim().toLowerCase())
+                : true;
+            const matchesSexo = sexo
+                ? item.sexo.trim().toLowerCase().includes(sexo.trim().toLowerCase())
+                : true;
+            const matchesEdad = edad
+                ? item.edad.trim().toLowerCase().includes(edad.trim().toLowerCase())
+                : true;
+            const matchesSangre = tipo_sangre
+                ? item.tipo_sangre.trim().toLowerCase().includes(tipo_sangre.trim().toLowerCase())
                 : true;
             const matchesContacto = contacto
                 ? item.contacto.trim().toLowerCase().includes(contacto.trim().toLowerCase())
@@ -69,9 +88,11 @@ export const NursesView = () => {
             const matchesEmail = email
                 ? item.email.trim().toLowerCase().includes(email.trim().toLowerCase())
                 : true;
+            const matchesStartDate = startDate ? itemDate >= startDate : true;
+            const matchesEndDate = endDate ? itemDate <= endDate : true;
 
             // Verifica que todos los filtros coincidan
-            return matchesNombres && matchesEmail && matchesCedula && matchesContacto;
+            return matchesNombres && matchesEmail && matchesCedula && matchesContacto && matchesSangre && matchesEdad && matchesStartDate && matchesEndDate && matchesSexo;
         });
 
         // Ordenamiento opcional
@@ -93,12 +114,12 @@ export const NursesView = () => {
             sx={{
                 display: 'flex',
                 justifyContent: 'center',
-                alignItems: 'center',
                 padding: '16px',
                 ml: { xs: '0', sm: '240px' },
                 mt: '35px',
+                flexDirection: { xs: 'column', xl: 'row' },
                 overflowX: 'hidden',
-                flexDirection: { xs: 'column', lg: 'row' },
+                position: 'relative',
             }}
         >
 
@@ -165,6 +186,10 @@ export const NursesView = () => {
                                             cedula={user.cedula}
                                             contacto={user.contacto}
                                             email={user.email}
+                                            tipo_sangre={user.tipo_sangre}
+                                            edad={user.edad}
+                                            fechanac={user.fechanac}
+                                            sexo={user.sexo}
                                             user={user}
                                         />
                                     ))}
@@ -178,8 +203,9 @@ export const NursesView = () => {
             {/* Filtro */}
             <FilterRegisters onFilter={handleFilter} />
 
+
             {/* Añadir un nuevo registro */}
-            <Box
+            {/* <Box
                 sx={{
                     position: 'fixed',
                     bottom: '0',
@@ -207,7 +233,7 @@ export const NursesView = () => {
                 >
                     <AddIcon fontSize="large" sx={{ color: '#43483A' }} />
                 </IconButton>
-            </Box>
+            </Box> */}
         </Box>
     );
 }

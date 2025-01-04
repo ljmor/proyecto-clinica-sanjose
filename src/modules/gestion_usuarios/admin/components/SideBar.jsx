@@ -11,15 +11,20 @@ import {
   useTheme,
   Box,
   Typography,
+  Tooltip,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { FaUserMd, FaNotesMedical, FaUserInjured } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom'; 
+import { FaUserMd, FaNotesMedical, FaUserInjured, FaBookMedical } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { Logout } from '@mui/icons-material';
+import { appLogout } from '../../store/admin/adminSlice';
+import { startLogout } from '../../../auth/store/auth/thunks';
 
 const menuItems = [
   { text: 'Médicos', icon: <FaUserMd />, path: 'medicos' },
   { text: 'Enfermería', icon: <FaNotesMedical />, path: 'enfermeria' },
+  { text: 'Recepcionistas', icon: <FaBookMedical />, path: 'recepcionistas' },
   { text: 'Pacientes', icon: <FaUserInjured />, path: 'pacientes' },
 ];
 
@@ -31,7 +36,6 @@ export const SideBar = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -45,6 +49,11 @@ export const SideBar = () => {
       setMobileOpen(false);
     }
   };
+
+  const handleLogout = () => {
+    dispatch(appLogout());
+    dispatch(startLogout());
+  }
 
 
   const drawerContent = (
@@ -97,6 +106,14 @@ export const SideBar = () => {
           </ListItem>
         ))}
       </List>
+
+      <Box position='fixed' bottom={7} left={7} >
+        <Tooltip title="Cerrar sesión" placement='right' >
+          <IconButton onClick={handleLogout} >
+            <Logout sx={{ color: 'white' }} />
+          </IconButton>
+        </Tooltip>
+      </Box>
     </Box>
   );
 

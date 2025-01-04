@@ -57,9 +57,11 @@ export const startLoadingRegisters = (type) => {
                     const pats = {
                         ok: true,
                         results: [
-                            { id: 7, nombres: 'Oliver Saraguro', email: 'johndoe@example.com', tipo_sangre: 'A+', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '1321231', fechanac: '01/01/2004', edad: '18' },
-                            { id: 8, nombres: 'Renato Rojas', email: 'johndoe@example.com', tipo_sangre: 'A+', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '1321231', fechanac: '01/01/2004', edad: '18' },
-                            { id: 9, nombres: 'John Doe 3', email: 'johndoe@example.com', tipo_sangre: 'A+', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '1321231', fechanac: '01/01/2004', edad: '18' },
+                            { id: 7, nombres: 'Oliver Saraguro', email: 'johndoe@example.com', tipo_sangre: 'A+', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '1321231', fechanac: '01/01/2004', edad: '21', contacto: '+5930320320' },
+                            { id: 8, nombres: 'Renato Rojas', email: 'ljmotl@example.com', tipo_sangre: 'ORH+', sexo: 'Femenino', ult_adm: '2023-10-05', cedula: '41561', fechanac: '01/01/2003', edad: '22', contacto: '2164486' },
+                            { id: 9, nombres: 'Manuel Saenz', email: 'johndoe@example.com', tipo_sangre: 'C-', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '0321315', fechanac: '01/01/2002', edad: '23', contacto: '16484305' },
+                            { id: 11, nombres: 'Doris JH', email: 'mymaio@example.com', tipo_sangre: 'OA+', sexo: 'Femenino', ult_adm: '2023-10-05', cedula: '3249451', fechanac: '01/01/2001', edad: '24', contacto: '056498489' },
+                            { id: 20, nombres: 'Lebron James', email: 'correoe@example.com', tipo_sangre: 'O-', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '03789841', fechanac: '01/01/2000', edad: '25', contacto: '089498' },
                         ],
                         type: 'patients'
                     }
@@ -75,9 +77,9 @@ export const startLoadingRegisters = (type) => {
                     const receps = {
                         ok: true,
                         results: [
-                            { id: 7, nombres: 'Oliver Saraguro', email: 'johndoe@example.com', cedula: '1321231' },
-                            { id: 8, nombres: 'Renato Rojas', email: 'johndoe@example.com', cedula: '1321231' },
-                            { id: 9, nombres: 'John Doe 3', email: 'johndoe@example.com', cedula: '1321231' },
+                            { id: 7, nombres: 'Oliver Saraguro', email: 'johndoe@example.com', cedula: '1321231', contacto: '+5930320320' },
+                            { id: 8, nombres: 'Renato Rojas', email: 'johndoe@example.com', cedula: '1321231', contacto: '+5930320320' },
+                            { id: 9, nombres: 'John Doe 3', email: 'johndoe@example.com', cedula: '1321231', contacto: '+5930320320' },
                         ],
                         type: 'recepcionists'
                     }

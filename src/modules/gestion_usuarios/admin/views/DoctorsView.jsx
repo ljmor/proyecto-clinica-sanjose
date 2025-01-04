@@ -55,13 +55,16 @@ export const DoctorsView = () => {
     };
 
     // MANEJO DE FILTRADO
-    const handleFilter = (especialidad, cedula, nombres, email, ordenarpor) => {
+    const handleFilter = ({ especialidad, cedula, nombres, email, ordenarpor, contacto }) => {
         // Siempre filtra desde los datos originales
         const filtered = originalDoctors.filter((item) => {
             // Banderas para cada condición de filtro
             const matchesEspec = especialidad ? item.especialidad === especialidad : true;
             const matchesCedula = cedula
                 ? item.cedula.trim().toLowerCase().includes(cedula.trim().toLowerCase())
+                : true;
+            const matchesContacto = contacto
+                ? item.contacto.trim().toLowerCase().includes(contacto.trim().toLowerCase())
                 : true;
             const matchesNombres = nombres
                 ? item.nombres.trim().toLowerCase().includes(nombres.trim().toLowerCase())
@@ -71,7 +74,7 @@ export const DoctorsView = () => {
                 : true;
 
             // Verifica que todos los filtros coincidan
-            return matchesEspec && matchesNombres && matchesEmail && matchesCedula;
+            return matchesEspec && matchesNombres && matchesEmail && matchesCedula && matchesContacto;
         });
 
         // Ordenamiento opcional

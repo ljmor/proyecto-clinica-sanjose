@@ -11,13 +11,11 @@ import { useNavigate } from "react-router-dom";
 const initialForm = {
     nombres: '',
     email: '',
-    especialidad: '',
     cedula: '',
     contacto: '',
-    registro: '',
 }
 
-export const CreateDoctor = () => {
+export const CreateNurse = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -25,48 +23,20 @@ export const CreateDoctor = () => {
         onInputChange,
         onResetForm,
         nombres,
-        especialidad,
         cedula,
         contacto,
         email,
-        registro,
     } = useForm(initialForm);
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                const base64 = reader.result.split(',')[1];
-                onInputChange({
-                    target: {
-                        name: 'registro', // Nombre del campo que estás actualizando
-                        value: base64, // Base64 del archivo
-                    },
-                });
-            };
-            reader.readAsDataURL(file);
-        }
-    };
 
-    const handleDownload = () => {
-        const link = document.createElement('a');
-        link.href = `data:application/octet-stream;base64,${registro}`;
-        link.download = `Registro_Senescyt.pdf`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
 
     const onSubmitData = (event) => {
         event.preventDefault();
         const data = {
             nombres,
             email,
-            especialidad,
             cedula,
             contacto,
-            registro,
         }
 
         Swal.fire({
@@ -147,7 +117,7 @@ export const CreateDoctor = () => {
                         lineHeight='146.475%'
                         textAlign='center'
                     >
-                        Registrar Médico</Typography>
+                        Registrar Enfermero/a</Typography>
                     <Typography
                         variant="subtitle1"
                         textAlign='center'
@@ -155,7 +125,7 @@ export const CreateDoctor = () => {
                         fontStyle='400'
                         lineHeight='146.475%'
                     >
-                        Llene los campos a continuación para el registro de un nuevo médico en la base de datos hospitalaria</Typography>
+                        Llene los campos a continuación para el registro de un nuevo enfermero en la base de datos hospitalaria</Typography>
                 </Grid2>
 
                 <form onSubmit={onSubmitData} autoComplete="off">
@@ -168,12 +138,12 @@ export const CreateDoctor = () => {
                         mr={{ xs: '30px', md: '0' }}
                     >
                         <Typography
-                            textAlign='left'
+                            textAlign='center'
                             fontSize='20px'
                             fontWeight='600'
                             lineHeight='146.475%'
                         >
-                            Llena los datos del nuevo médico
+                            Llena los datos del nuevo enfermero/a
                         </Typography>
                         {/* Fila de campos */}
                         <Grid2
@@ -182,12 +152,14 @@ export const CreateDoctor = () => {
                             mt='30px'
                             gap='30px'
                             flexWrap='wrap'
+                            width='100%'
+                            justifyContent='center'
                         >
                             {/* Pila 1 */}
                             <Grid2
                                 display='flex'
                                 flexDirection='column'
-                                width={{ xs: '100%', md: '30%' }}
+                                width={{ xs: '100%', md: '40%' }}
                                 gap='18px'
                             >
                                 <Box>
@@ -273,6 +245,58 @@ export const CreateDoctor = () => {
                                     />
                                 </Box>
 
+                                
+
+                            </Grid2>
+                            {/* Pila 2 */}
+                            <Grid2
+                                display='flex'
+                                flexDirection='column'
+                                width={{ xs: '100%', md: '40%' }}
+                                gap='18px'
+                            >
+                                
+                                <Box>
+                                    <Typography
+                                        fontSize='13px'
+                                        fontWeight='300'
+                                        lineHeight='146.475%'
+                                        ml='12px'
+                                        mb='5px'
+                                    >
+                                        Contacto
+                                    </Typography>
+                                    <TextField
+                                        type="number"
+                                        placeholder="Ingresa el contacto"
+                                        fullWidth
+                                        name="contacto"
+                                        value={contacto}
+                                        onChange={onInputChange}
+                                        slotProps={{
+                                            input: {
+                                                sx: {
+                                                    width: '100%',
+                                                    height: '48px',
+                                                    padding: '8px 8px 8px 16px',
+                                                    backgroundColor: '#E9E9E9',
+                                                    borderRadius: '4px',
+                                                    '& input': {
+                                                        color: '#080808',
+                                                    },
+                                                    '& input::-webkit-input-placeholder': {
+                                                        color: '#080808',
+                                                        fontSize: '12px'
+                                                    },
+                                                    '& .MuiOutlinedInput-notchedOutline': {
+                                                        border: 'none'
+                                                    },
+                                                },
+                                            }
+                                        }}
+                                    />
+                                </Box>
+
                                 <Box>
                                     <Typography
                                         fontSize='13px'
@@ -314,164 +338,8 @@ export const CreateDoctor = () => {
                                         }}
                                     />
                                 </Box>
-
                             </Grid2>
-                            {/* Pila 2 */}
-                            <Grid2
-                                display='flex'
-                                flexDirection='column'
-                                width={{ xs: '100%', md: '30%' }}
-                                gap='18px'
-                            >
-                                <Box>
-                                    <Typography
-                                        fontSize='13px'
-                                        fontWeight='300'
-                                        lineHeight='146.475%'
-                                        ml='12px'
-                                        mb='5px'
-                                    >
-                                        Especialidad
-                                    </Typography>
-                                    <TextField
-                                        name="especialidad"
-                                        value={especialidad}
-                                        placeholder="Especialidad médica"
-                                        onChange={onInputChange}
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        select
-                                        slotProps={{
-                                            input: {
-                                                sx: {
-                                                    width: '100%',
-                                                    height: '48px',
-                                                    padding: '8px 8px 8px 16px',
-                                                    backgroundColor: '#E9E9E9',
-                                                    borderRadius: '4px',
-                                                    '& input': {
-                                                        color: '#080808',
-                                                    },
-                                                    '& input::-webkit-input-placeholder': {
-                                                        color: '#080808',
-                                                        fontSize: '12px'
-                                                    },
-                                                    '& .MuiOutlinedInput-notchedOutline': {
-                                                        border: 'none'
-                                                    },
-                                                },
-                                            }
-                                        }}
-                                    >
-                                        <MenuItem value="Cirugía general y laparoscópica">Cirugía general y laparoscópica</MenuItem>
-                                        <MenuItem value="Cirugía pediátrica">Cirugía pediátrica</MenuItem>
-                                        <MenuItem value="Cirugía ginecológica y obstetricia">Cirugía ginecológica y obstetricia</MenuItem>
-                                        <MenuItem value="Cirugía plástica y reconstructiva">Cirugía plástica y reconstructiva</MenuItem>
-                                        <MenuItem value="Cirugía traumatológica y ortopedia">Cirugía traumatológica y ortopedia</MenuItem>
-                                        <MenuItem value="Cirugía urológica">Cirugía urológica                            </MenuItem>
-                                        <MenuItem value="Pediatría y neonatología">Pediatría y neonatología</MenuItem>
-                                        <MenuItem value="Nefrología">Nefrología</MenuItem>
-                                        <MenuItem value="Otorrinolaringología">Otorrinolaringología</MenuItem>
-                                        <MenuItem value="Medicina interna">Medicina interna</MenuItem>
-                                        <MenuItem value="Cardiología">Cardiología</MenuItem>
-                                        <MenuItem value="Neurocirugía">Neurocirugía</MenuItem>
-                                        <MenuItem value="Endocrinología">Endocrinología</MenuItem>
-                                        <MenuItem value="Dermatología">Dermatología</MenuItem>
-                                        <MenuItem value="Psicología clínica">Psicología clínica</MenuItem>
-                                        <MenuItem value="Gastroenterología">Gastroenterología</MenuItem>
-                                        <MenuItem value="Cirugía vascular">Cirugía vascular</MenuItem>
-                                        <MenuItem value="Odontología">Odontología</MenuItem>
-                                        <MenuItem value="Psiquiatría">Psiquiatría</MenuItem>
-                                        <MenuItem value="Urología">Urología</MenuItem>
-
-                                    </TextField>
-                                </Box>
-                                <Box>
-                                    <Typography
-                                        fontSize='13px'
-                                        fontWeight='300'
-                                        lineHeight='146.475%'
-                                        ml='12px'
-                                        mb='5px'
-                                    >
-                                        Contacto
-                                    </Typography>
-                                    <TextField
-                                        type="number"
-                                        placeholder="Ingresa el contacto"
-                                        fullWidth
-                                        name="contacto"
-                                        value={contacto}
-                                        onChange={onInputChange}
-                                        slotProps={{
-                                            input: {
-                                                sx: {
-                                                    width: '100%',
-                                                    height: '48px',
-                                                    padding: '8px 8px 8px 16px',
-                                                    backgroundColor: '#E9E9E9',
-                                                    borderRadius: '4px',
-                                                    '& input': {
-                                                        color: '#080808',
-                                                    },
-                                                    '& input::-webkit-input-placeholder': {
-                                                        color: '#080808',
-                                                        fontSize: '12px'
-                                                    },
-                                                    '& .MuiOutlinedInput-notchedOutline': {
-                                                        border: 'none'
-                                                    },
-                                                },
-                                            }
-                                        }}
-                                    />
-                                </Box>
-                            </Grid2>
-                            {/* Pila 3 */}
-                            <Grid2
-                                display='flex'
-                                flexDirection='column'
-                                width={{ xs: '100%', md: '30%' }}
-                                gap='18px'
-                            >
-                                <Box>
-                                    <Typography
-                                        fontSize='13px'
-                                        fontWeight='300'
-                                        lineHeight='146.475%'
-                                        ml='12px'
-                                        mb='5px'
-                                    >
-                                        Registro del Senescyt
-                                    </Typography>
-                                    <input
-                                        type="file"
-                                        id='fileIn'
-                                        required
-                                        accept="application/pdf"
-                                        class="flex w-full rounded-md border border-blue-300 border-input bg-white text-sm text-gray-400 file:border-0 file:bg-blue-600 file:text-white file:text-sm file:font-medium"
-                                        onChange={handleFileChange}
-                                        style={{ marginTop: '2px', marginBottom: '5px' }}
-                                    />
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={handleDownload}
-                                        disabled={!registro}
-                                        endIcon={<Description />}
-                                        sx={{
-                                            mr: '30px',
-                                            mt: '10px',
-                                            textTransform: 'none',
-                                            borderRadius: '20px',
-                                        }}
-                                    >
-                                        Descargar registro
-                                    </Button>
-                                </Box>
-
-                            </Grid2>
+                            
                         </Grid2>
                     </Grid2>
 
@@ -481,7 +349,7 @@ export const CreateDoctor = () => {
                         width='100%'
                         display='flex'
                         justifyContent='center'
-                        mt={20}
+                        mt={15}
                     >
                         <Button
                             type="submit"

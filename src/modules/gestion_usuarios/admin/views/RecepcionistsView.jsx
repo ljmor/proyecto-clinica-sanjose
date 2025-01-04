@@ -27,7 +27,7 @@ const tableHeaders = [
     { name: 'Contacto' },
 ];
 
-export const NursesView = () => {
+export const RecepcionistsView = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -37,7 +37,7 @@ export const NursesView = () => {
     const { resp, isLoading, activeRegister } = useSelector(state => state.admin);
 
     useEffect(() => {
-        dispatch(startLoadingRegisters('nurses'));
+        dispatch(startLoadingRegisters('recepcionists'));
     }, [dispatch]);
 
     // Actualiza los useres solo cuando resp.results cambia
