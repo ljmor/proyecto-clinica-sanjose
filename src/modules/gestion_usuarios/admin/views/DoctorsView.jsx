@@ -20,7 +20,6 @@ import { ListItem } from '../components/ListItem';
 import { FilterRegisters } from '../components/FilterRegisters';
 
 const tableHeaders = [
-    { name: 'ID' },
     { name: 'Nombres' },
     { name: 'Especialidad' },
     { name: 'Cedula' },
@@ -34,7 +33,7 @@ export const DoctorsView = () => {
     const navigate = useNavigate();
 
     const [doctors, setDoctors] = useState([]);
-    const [originalDoctors, setOriginalDoctors] = useState([]); // Nuevo estado para mantener los datos originales
+    const [originalDoctors, setOriginalDoctors] = useState([]);
 
     const { resp, isLoading, activeRegister } = useSelector(state => state.admin);
 
@@ -61,7 +60,7 @@ export const DoctorsView = () => {
             // Banderas para cada condición de filtro
             const matchesEspec = especialidad ? item.especialidad === especialidad : true;
             const matchesCedula = cedula
-                ? item.cedula.trim().toLowerCase().includes(cedula.trim().toLowerCase())
+                ? item.cedula.toString().trim().toLowerCase().includes(cedula.trim().toLowerCase())
                 : true;
             const matchesContacto = contacto
                 ? item.contacto.trim().toLowerCase().includes(contacto.trim().toLowerCase())
@@ -108,7 +107,7 @@ export const DoctorsView = () => {
 
             {/* Listado */}
             <Paper
-                className='animate__animated animate__fadeIn'
+                className='animate__animated animate__slideInLeft'
                 sx={{
                     width: { xs: '100%', xl: '1250px' },
                     height: '720px',
@@ -135,14 +134,15 @@ export const DoctorsView = () => {
 
                     <TableContainer>
                         {isLoading ? (
-                            <Box
-                                display="flex"
-                                justifyContent="center"
-                                alignItems="center"
-                                height="300px"
-                            >
-                                <img src="/src/assets/imgs/loading.gif" width='40px' alt="Cargando" />
-                            </Box>
+                            <div class="loader">
+                                <section class="dots-container">
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                </section>
+                            </div>
                         ) : (
                             <Table>
                                 <TableHead>
@@ -163,8 +163,7 @@ export const DoctorsView = () => {
                                 <TableBody>
                                     {doctors?.map((doctor) => (
                                         <ListItem
-                                            key={doctor.id}
-                                            id={doctor.id}
+                                            key={doctor.cedula}
                                             nombres={doctor.nombres}
                                             especialidad={doctor.especialidad}
                                             cedula={doctor.cedula}

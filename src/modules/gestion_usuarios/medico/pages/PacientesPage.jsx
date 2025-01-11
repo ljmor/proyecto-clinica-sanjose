@@ -265,7 +265,7 @@ export const PacientesPage = () => {
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: { xs: 400, md: 600 },
-            height: 450,
+            height: { xs: 600, md: 500 },
             bgcolor: 'background.paper',
             borderRadius: '10px',
             boxShadow: 24,
@@ -298,7 +298,7 @@ export const PacientesPage = () => {
               fullWidth
               sx={{
                 mt: 2,
-                width: '300px',
+                width: { xs: '240px', md: '300px' },
                 display: 'flex',
               }}
             />
@@ -331,7 +331,7 @@ export const PacientesPage = () => {
                 {activeRegister}
               </Box>
               : (Object.keys(activeRegister).length === 0) ?
-                <Box mt={10} sx={{ backgroundColor: '#e0e0e0', width: '450px', height: '60px', display: 'flex', alignItems: 'center', px: 2, textAlign: 'left', color: '#595959' }} >
+                <Box mt={10} sx={{ backgroundColor: '#e0e0e0', width: { xs: '350px', md: '450px' }, height: '60px', display: 'flex', alignItems: 'center', px: 2, textAlign: 'left', color: '#595959' }} >
                   Busca un paciente para empezar
                 </Box> :
                 <Box mt={5} >

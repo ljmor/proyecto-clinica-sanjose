@@ -21,6 +21,7 @@ export const authSlice = createSlice({
             state.status = 'not-auth';
             state.resp = {};
         }
+        
     }
 });
 

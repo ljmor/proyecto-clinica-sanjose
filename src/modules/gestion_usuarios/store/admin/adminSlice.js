@@ -31,8 +31,8 @@ export const adminSlice = createSlice({
             state.activeRegister = payload;
         },
         deleteRegister: (state, { payload }) => {
-            state.resp.results = state.resp.results.filter( reg => reg.id !== payload );
-            state.activeRegister = null;
+            state.resp.results = state.resp.results.filter( reg => reg.cedula !== payload );
+            state.activeRegister = {};
         },
         appLogout: (state) => {
             state.resp = {};

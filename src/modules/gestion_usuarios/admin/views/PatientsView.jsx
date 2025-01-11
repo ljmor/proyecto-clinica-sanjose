@@ -21,7 +21,6 @@ import { ListItem } from '../components/ListItem';
 import { FilterRegisters } from '../components/FilterRegisters';
 
 const tableHeaders = [
-    { name: 'ID' },
     { name: 'Nombres' },
     { name: 'Tipo de Sangre' },
     { name: 'Edad' },
@@ -68,13 +67,13 @@ export const PatientsView = () => {
 
             // Banderas para cada condición de filtro
             const matchesCedula = cedula
-                ? item.cedula.trim().toLowerCase().includes(cedula.trim().toLowerCase())
+                ? item.cedula.toString().trim().toLowerCase().includes(cedula.trim().toLowerCase())
                 : true;
             const matchesSexo = sexo
                 ? item.sexo.trim().toLowerCase().includes(sexo.trim().toLowerCase())
                 : true;
             const matchesEdad = edad
-                ? item.edad.trim().toLowerCase().includes(edad.trim().toLowerCase())
+                ? item.edad.toString().trim().toLowerCase().includes(edad.trim().toLowerCase())
                 : true;
             const matchesSangre = tipo_sangre
                 ? item.tipo_sangre.trim().toLowerCase().includes(tipo_sangre.trim().toLowerCase())
@@ -125,7 +124,7 @@ export const PatientsView = () => {
 
             {/* Listado */}
             <Paper
-                className='animate__animated animate__fadeIn'
+                className='animate__animated animate__slideInLeft'
                 sx={{
                     width: { xs: '100%', xl: '1250px' },
                     height: '720px',
@@ -152,14 +151,15 @@ export const PatientsView = () => {
 
                     <TableContainer>
                         {isLoading ? (
-                            <Box
-                                display="flex"
-                                justifyContent="center"
-                                alignItems="center"
-                                height="300px"
-                            >
-                                <img src="/src/assets/imgs/loading.gif" width='40px' alt="Cargando" />
-                            </Box>
+                            <div class="loader">
+                                <section class="dots-container">
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                </section>
+                            </div>
                         ) : (
                             <Table>
                                 <TableHead>
@@ -180,8 +180,7 @@ export const PatientsView = () => {
                                 <TableBody>
                                     {users?.map((user) => (
                                         <ListItem
-                                            key={user.id}
-                                            id={user.id}
+                                            key={user.cedula}
                                             nombres={user.nombres}
                                             cedula={user.cedula}
                                             contacto={user.contacto}

@@ -50,15 +50,14 @@ export const CreateNurse = () => {
             cancelButtonText: "Cancelar"
         }).then((result) => {
             if (result.isConfirmed) {
+                dispatch(startAddRegister(data));
+                navigate(-1);
+
                 Swal.fire({
                     title: "¡Creado!",
                     text: "El usuario ha sido creado con éxito",
                     icon: "success"
                 });
-
-                dispatch(startAddRegister(data));
-                navigate(-1);
-
             }
         });
 

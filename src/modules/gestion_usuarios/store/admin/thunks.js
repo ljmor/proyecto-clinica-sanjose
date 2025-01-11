@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+import adminApi from "../../../../api/adminApi";
 import { addRegister, deleteRegister, editRegister, getRegisters, setActiveRegister } from "./adminSlice";
 
 export const startSetActiveRegister = (activeRegister) => {
@@ -8,136 +10,95 @@ export const startSetActiveRegister = (activeRegister) => {
 
 export const startLoadingRegisters = (type) => {
     return async (dispatch) => {
-
         try {
+            let endpoint = '';
 
-            switch (type) {
-                case 'doctors':
-                    // Obtener del backend
-                    // const { docs } = await api.get('/docs');
-
-                    // Simulacion de datos para pruebas
-                    const docs = {
-                        ok: true,
-                        results: [
-                            { id: 1, nombres: 'John Doe', email: 'ljmo@example.com', especialidad: 'Cardiologia', cedula: '1321231', contacto: '+5930320320', registro: 'UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA==' },
-                            { id: 2, nombres: 'Andrez Gonzales', email: 'sxas@example.com', especialidad: 'Espc 2', cedula: '54986445', contacto: '+5930320320', registro: 'UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA==' },
-                            { id: 3, nombres: 'Jose Cango', email: 'johndoe@example.com', especialidad: 'Espc 2', cedula: '0654684', contacto: '+5930320320', registro: 'UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA==' },
-                            { id: 4, nombres: 'Jose Cango', email: 'johndoe@example.com', especialidad: 'Espc 2', cedula: '0654684', contacto: '+5930320320', registro: 'UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA==' },
-                        ],
-                        type: 'doctors'
-                    }
-
-                    dispatch(getRegisters(docs));
-                    break;
-
-                case 'nurses':
-                    // Obtener del backend
-                    // const { nurses } = await api.get('/nurses');
-
-                    // Simulacion de datos para pruebas
-                    const nurses = {
-                        ok: true,
-                        results: [
-                            { id: 4, nombres: 'Jose Granda', email: 'sample@example.com', cedula: '110546548648', contacto: '+5930320320' },
-                            { id: 5, nombres: 'Ana Armijos', email: 'sample@example.com', cedula: '110546548648', contacto: '+5930320320' },
-                            { id: 6, nombres: 'Luis Garcia', email: 'sample@example.com', cedula: '110546548648', contacto: '+5930320320' },
-                        ],
-                        type: 'nurses'
-                    }
-
-                    dispatch(getRegisters(nurses));
-                    break;
-
-                case 'patients':
-                    // Obtener del backend
-                    // const { pats } = await api.get('/pats');
-
-                    // Simulacion de datos para pruebas
-                    const pats = {
-                        ok: true,
-                        results: [
-                            { id: 7, nombres: 'Oliver Saraguro', email: 'johndoe@example.com', tipo_sangre: 'A+', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '1321231', fechanac: '01/01/2004', edad: '21', contacto: '+5930320320' },
-                            { id: 8, nombres: 'Renato Rojas', email: 'ljmotl@example.com', tipo_sangre: 'ORH+', sexo: 'Femenino', ult_adm: '2023-10-05', cedula: '41561', fechanac: '01/01/2003', edad: '22', contacto: '2164486' },
-                            { id: 9, nombres: 'Manuel Saenz', email: 'johndoe@example.com', tipo_sangre: 'C-', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '0321315', fechanac: '01/01/2002', edad: '23', contacto: '16484305' },
-                            { id: 11, nombres: 'Doris JH', email: 'mymaio@example.com', tipo_sangre: 'OA+', sexo: 'Femenino', ult_adm: '2023-10-05', cedula: '3249451', fechanac: '01/01/2001', edad: '24', contacto: '056498489' },
-                            { id: 20, nombres: 'Lebron James', email: 'correoe@example.com', tipo_sangre: 'O-', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '03789841', fechanac: '01/01/2000', edad: '25', contacto: '089498' },
-                        ],
-                        type: 'patients'
-                    }
-
-                    dispatch(getRegisters(pats));
-                    break;
-
-                case 'recepcionists':
-                    // Obtener del backend
-                    // const { receps } = await api.get('/receps');
-
-                    // Simulacion de datos para pruebas
-                    const receps = {
-                        ok: true,
-                        results: [
-                            { id: 7, nombres: 'Oliver Saraguro', email: 'johndoe@example.com', cedula: '1321231', contacto: '+5930320320' },
-                            { id: 8, nombres: 'Renato Rojas', email: 'johndoe@example.com', cedula: '1321231', contacto: '+5930320320' },
-                            { id: 9, nombres: 'John Doe 3', email: 'johndoe@example.com', cedula: '1321231', contacto: '+5930320320' },
-                        ],
-                        type: 'recepcionists'
-                    }
-
-                    dispatch(getRegisters(receps));
-                    break;
-
-                default:
-                    break;
+            if (type === 'doctors') {
+                endpoint = 'admin/docs';
+            } else if (type === 'nurses') {
+                endpoint = 'admin/nurses';
+            } else if (type === 'patients') {
+                endpoint = 'admin/patients';
+            } else if (type === 'recepcionists') {
+                endpoint = 'admin/recepcionists';
+            } else {
+                return;
             }
 
+            const { data } = await adminApi.get(endpoint);
+            dispatch(getRegisters(data));
 
         } catch (error) {
             console.error(error);
         }
-
     }
 }
 
 
 export const startAddRegister = (info) => {
-    return async (dispatch) => {
-
+    return async (dispatch, getState) => {
         try {
+            // Si tiene ID se actualiza
             if (info.id) {
-                // Actualizar
-                // Desde el backend a la BD
-                // await api.put(`/${info.id}`, info);
-
+                await adminApi.put(`admin/${info.id}`, info);
                 dispatch(editRegister({ ...info }));
                 return;
-
             }
 
-            // Crear
-            // Desde el backend a la BD
-            // const { data } = await api.post('/', info);
-            const newElem = {
+            // Crear Registro
+            const { resp } = getState().admin;
+            let endpoint = '';
+
+            if (resp.type === 'doctors') {
+                endpoint = 'admin/doc';
+            } else if (resp.type === 'nurses') {
+                endpoint = 'admin/nurse';
+            } else if (resp.type === 'recepcionists') {
+                endpoint = 'admin/recepcionist';
+            } else {
+                return;
+            }
+
+            const { data } = await adminApi.post(endpoint, info);
+
+            const newRegister = {
                 ...info,
-                // id: data.id, Cuando se hace desde backend
-                id: Date.now(), // Simulando generado desde la BD
-            }
-            dispatch(addRegister(newElem));
+                id: data.id
+            };
 
-        } catch (error) {
-            console.error(error);
+            dispatch(addRegister(newRegister));
+
+        } catch (err) {
+            const { data } = err.response;
+            let errorMessages = '';
+
+            if (data.errors) {
+                errorMessages = Object.values(data.errors)
+                    .map(error => `<li>${error.msg}</li>`)
+                    .join('');
+                errorMessages = `<ul>${errorMessages}</ul>`;
+            } else if (data.msg) {
+                errorMessages = `<p>${data.msg}</p>`;
+            }
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                html: errorMessages
+            });
         }
+
     }
 }
 
-export const startDeleteRegister = (id) => {
+export const startDeleteRegister = (cedula) => {
     return async (dispatch) => {
 
         try {
-            if (id) {
+            if (cedula) {
                 // Eliminar desde el backend a la BD
-                // await api.delete(`/${id}`);
-                dispatch(deleteRegister(id));
+                await adminApi.delete(`admin/${cedula}`);
+                dispatch(deleteRegister(cedula));
             }
 
         } catch (error) {

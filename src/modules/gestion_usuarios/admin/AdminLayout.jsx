@@ -4,8 +4,6 @@ import { SideBar } from './components/SideBar';
 export const AdminLayout = ({ children }) => {
     return (
         <div className="adminlayout">
-            {/* NavBar */}
-            {/* <NavBar /> */}
 
             {/* SideBar */}
             <SideBar />

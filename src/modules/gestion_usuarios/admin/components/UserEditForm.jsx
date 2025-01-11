@@ -59,13 +59,14 @@ const UserEditForm = ({ onClose }) => {
             cancelButtonText: "Cancelar"
         }).then((result) => {
             if (result.isConfirmed) {
+                dispatch(startAddRegister(formData));
+                
                 Swal.fire({
                     title: "¡Actualizado!",
                     text: "Se han actualizado los datos del usuario con éxito",
                     icon: "success"
                 });
 
-                dispatch(startAddRegister(formData));
             }
         });
 
@@ -88,6 +89,7 @@ const UserEditForm = ({ onClose }) => {
                 <Grid2 item size={{ xs: 12, sm: 6 }}>
                     <TextField
                         fullWidth
+                        disabled
                         label="Cédula"
                         name="cedula"
                         value={formData.cedula || ''}

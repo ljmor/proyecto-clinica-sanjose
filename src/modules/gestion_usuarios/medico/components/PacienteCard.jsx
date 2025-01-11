@@ -22,7 +22,7 @@ export const PacienteCard = ({ paciente, disButton = false }) => {
       elevation={3}
       sx={{
         width: '300px',
-        height: '200px',
+        height: '250px',
         padding: 3,
         borderRadius: "12px",
         transition: "all 0.3s ease",

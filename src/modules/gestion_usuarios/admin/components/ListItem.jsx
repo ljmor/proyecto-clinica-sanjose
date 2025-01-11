@@ -8,7 +8,7 @@ import { Edit } from '@mui/icons-material';
 import UserEditModal from './UserEditModal';
 import UserEditForm from './UserEditForm';
 
-export const ListItem = ({ id, nombres, especialidad = '', cedula, contacto, user, email, registro = '', tipo_sangre = '', edad = '', fechanac = '', sexo = '' }) => {
+export const ListItem = ({ nombres, especialidad = '', cedula, contacto, user, email, registro = '', tipo_sangre = '', edad = '', fechanac = '', sexo = '' }) => {
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const { resp } = useSelector(state => state.admin);
@@ -41,7 +41,7 @@ export const ListItem = ({ id, nombres, especialidad = '', cedula, contacto, use
           text: "El usuario ha sido eliminado del sistema con éxito",
           icon: "success"
         });
-        dispatch(startDeleteRegister(id));
+        dispatch(startDeleteRegister(cedula));
       }
     });
   }
@@ -69,8 +69,7 @@ export const ListItem = ({ id, nombres, especialidad = '', cedula, contacto, use
 
   return (
     <>
-      <TableRow>
-        <TableCell>{id}</TableCell>
+      <TableRow className='animate__animated animate__fadeIn animate__slow'>
         <TableCell>{nombres}</TableCell>
         {(especialidad !== '') && (<TableCell>{especialidad}</TableCell>)}
         {(tipo_sangre !== '') && (<TableCell>{tipo_sangre}</TableCell>)}

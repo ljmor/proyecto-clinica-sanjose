@@ -224,6 +224,7 @@ const FormTypeModal = ({ open, onClose, onSubmit }) => {
                 <Button
                   onClick={handleSubmit}
                   variant="contained"
+                  disabled={!formType}
                   sx={{
                     bgcolor: "#004d40",
                     borderRadius: "20px",
