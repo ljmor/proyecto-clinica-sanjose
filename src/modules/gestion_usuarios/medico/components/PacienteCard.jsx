@@ -7,13 +7,14 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { ArrowForwardIos } from '@mui/icons-material';
 import { MdMedicalInformation } from 'react-icons/md';
+import { startSetActiveRegister } from '../../store/medico/thunks';
 
 export const PacienteCard = ({ paciente, disButton = false }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const onClickPaciente = () => {
-    // dispatch(setActivePaciente(paciente));
+    dispatch(startSetActiveRegister(paciente));
     navigate(`historia`); // Navigate to patient detail page
   };
 
@@ -21,8 +22,8 @@ export const PacienteCard = ({ paciente, disButton = false }) => {
     <Paper
       elevation={3}
       sx={{
-        width: '300px',
-        height: '250px',
+        width: '320px',
+        height: '220px',
         padding: 3,
         borderRadius: "12px",
         transition: "all 0.3s ease",
@@ -36,8 +37,8 @@ export const PacienteCard = ({ paciente, disButton = false }) => {
       <Box
         sx={{
           position: 'absolute',
-          top: '10px',
-          right: '10px',
+          top: '12px',
+          right: '12px',
           width: '75px',
           height: '75px',
           borderRadius: '50%',
@@ -59,9 +60,6 @@ export const PacienteCard = ({ paciente, disButton = false }) => {
       <Box sx={{ mb: 2 }}>
         <Typography variant="body2" sx={{ color: "#00695c", mb: 1 }}>
           <strong>Cédula:</strong> {paciente.cedula}
-        </Typography>
-        <Typography variant="body2" sx={{ color: "#00695c", mb: 1 }}>
-          <strong>Última admisión:</strong> {paciente.ult_adm}
         </Typography>
         <Typography variant="body2" sx={{ color: "#00695c", mb: 1 }}>
           <strong>Edad:</strong> {paciente.edad}

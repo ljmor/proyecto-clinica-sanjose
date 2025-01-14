@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import adminApi from "../../../../api/adminApi";
+import api from "../../../../api/api";
 import { addRegister, deleteRegister, editRegister, getRegisters, setActiveRegister } from "./adminSlice";
 
 export const startSetActiveRegister = (activeRegister) => {
@@ -25,7 +25,7 @@ export const startLoadingRegisters = (type) => {
                 return;
             }
 
-            const { data } = await adminApi.get(endpoint);
+            const { data } = await api.get(endpoint);
             dispatch(getRegisters(data));
 
         } catch (error) {
@@ -40,7 +40,7 @@ export const startAddRegister = (info) => {
         try {
             // Si tiene ID se actualiza
             if (info.id) {
-                await adminApi.put(`admin/${info.id}`, info);
+                await api.put(`admin/${info.id}`, info);
                 dispatch(editRegister({ ...info }));
                 return;
             }
@@ -59,7 +59,7 @@ export const startAddRegister = (info) => {
                 return;
             }
 
-            const { data } = await adminApi.post(endpoint, info);
+            const { data } = await api.post(endpoint, info);
 
             const newRegister = {
                 ...info,
@@ -97,7 +97,7 @@ export const startDeleteRegister = (cedula) => {
         try {
             if (cedula) {
                 // Eliminar desde el backend a la BD
-                await adminApi.delete(`admin/${cedula}`);
+                await api.delete(`admin/${cedula}`);
                 dispatch(deleteRegister(cedula));
             }
 

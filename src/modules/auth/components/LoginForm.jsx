@@ -1,27 +1,33 @@
 import { Alert, Box, Button, Divider, Grid2, TextField, Typography } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "../../../hooks/useForm";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { startLogin } from "../../auth/store/auth/thunks";
 
 const formData = {
     email: '',
     password: '',
+    cedula: '',
 }
 
 
 export const LoginForm = () => {
 
     const { status, errorMessage } = useSelector(state => state.auth)
+    const [rol, setRol] = useState('personal');
     const dispatch = useDispatch();
 
-    const { email, password, onInputChange, formState } = useForm(formData);
+    const { email, password, cedula, onInputChange, formState } = useForm(formData);
 
     const isAuth = useMemo(() => status === 'checking', [status]);
 
     const onSubmit = (event) => {
         event.preventDefault();
-        dispatch(startLogin({ email, password }));
+        dispatch(startLogin({ email, password, cedula }));
+    }
+
+    const handleRol = () => {
+        setRol(rol === 'personal' ? 'paciente' : 'personal');
     }
 
     return (
@@ -93,6 +99,7 @@ export const LoginForm = () => {
                             </Typography>
                             <TextField
                                 type='email'
+                                required
                                 placeholder='Correo electrónico'
                                 id='emailid'
                                 name="email"
@@ -126,54 +133,117 @@ export const LoginForm = () => {
                                 }}
                             />
                         </Grid2>
-                        <Grid2 container direction='column' sx={{ mb: '15px', width: '100%' }}>
-                            <Typography
-                                variant='caption'
-                                component='label'
-                                htmlFor='passid'
-                                sx={{
-                                    color: 'rgba(0, 0, 0, 0.48)',
-                                    fontFeatureSettings: "'liga' off, 'clig' off",
-                                    fontFamily: 'Roboto',
-                                    fontSize: '13px',
-                                    fontStyle: 'normal',
-                                    fontWeight: '300',
-                                    lineHeight: '20px',
-                                    marginLeft: '10px',
-                                }}
-                            >
-                                Contraseña
-                            </Typography>
-                            <TextField
-                                type='password'
-                                placeholder='Ingresar contraseña'
-                                id='passid'
-                                name="password"
-                                value={password}
-                                onChange={onInputChange}
-                                fullWidth
-                                slotProps={{
-                                    input: {
-                                        sx: {
-                                            width: '100%',
-                                            height: '48px',
-                                            padding: '8px 8px 8px 16px',
-                                            backgroundColor: '#f2f2f2',
-                                            borderRadius: '4px',
-                                            '& input': {
-                                                color: '#080808',
-                                            },
-                                            '& input::-webkit-input-placeholder': {
-                                                color: '#080808',
-                                            },
-                                            '& .MuiOutlinedInput-notchedOutline': {
-                                                border: 'none'
-                                            },
-                                        },
-                                    }
-                                }}
-                            />
-                        </Grid2>
+
+                        {
+                            (rol === 'personal') ?
+                                <Box>
+                                    <Grid2 container direction='column' sx={{ mb: '15px', width: '100%' }} className='animate__animated animate__headShake animate__faster' >
+                                        <Typography
+                                            variant='caption'
+                                            component='label'
+                                            htmlFor='passid'
+                                            sx={{
+                                                color: 'rgba(0, 0, 0, 0.48)',
+                                                fontFeatureSettings: "'liga' off, 'clig' off",
+                                                fontFamily: 'Roboto',
+                                                fontSize: '13px',
+                                                fontStyle: 'normal',
+                                                fontWeight: '300',
+                                                lineHeight: '20px',
+                                                marginLeft: '10px',
+                                            }}
+                                        >
+                                            Contraseña
+                                        </Typography>
+                                        <TextField
+                                            type='password'
+                                            placeholder='Ingresar contraseña'
+                                            id='passid'
+                                            name="password"
+                                            value={password}
+                                            required
+                                            onChange={onInputChange}
+                                            fullWidth
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        width: '100%',
+                                                        height: '48px',
+                                                        padding: '8px 8px 8px 16px',
+                                                        backgroundColor: '#f2f2f2',
+                                                        borderRadius: '4px',
+                                                        '& input': {
+                                                            color: '#080808',
+                                                        },
+                                                        '& input::-webkit-input-placeholder': {
+                                                            color: '#080808',
+                                                        },
+                                                        '& .MuiOutlinedInput-notchedOutline': {
+                                                            border: 'none'
+                                                        },
+                                                    },
+                                                }
+                                            }}
+                                        />
+                                    </Grid2>
+                                </Box>
+
+                                :
+
+                                <Box className='animate__animated animate__headShake animate__faster' >  
+                                    <Grid2 container direction='column' sx={{ mb: '15px', width: '100%' }}  >
+                                        <Typography
+                                            variant='caption'
+                                            component='label'
+                                            htmlFor='cedula'
+                                            sx={{
+                                                color: 'rgba(0, 0, 0, 0.48)',
+                                                fontFeatureSettings: "'liga' off, 'clig' off",
+                                                fontFamily: 'Roboto',
+                                                fontSize: '13px',
+                                                fontStyle: 'normal',
+                                                fontWeight: '300',
+                                                lineHeight: '20px',
+                                                marginLeft: '10px',
+                                            }}
+                                        >
+                                            Cedula
+                                        </Typography>
+                                        <TextField
+                                            type='text'
+                                            placeholder='Ingresar cedula'
+                                            id='cedula'
+                                            name="cedula"
+                                            value={cedula}
+                                            onChange={onInputChange}
+                                            fullWidth
+                                            required
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        width: '100%',
+                                                        height: '48px',
+                                                        padding: '8px 8px 8px 16px',
+                                                        backgroundColor: '#f2f2f2',
+                                                        borderRadius: '4px',
+                                                        '& input': {
+                                                            color: '#080808',
+                                                        },
+                                                        '& input::-webkit-input-placeholder': {
+                                                            color: '#080808',
+                                                        },
+                                                        '& .MuiOutlinedInput-notchedOutline': {
+                                                            border: 'none'
+                                                        },
+                                                    },
+                                                }
+                                            }}
+                                        />
+                                    </Grid2>
+                                </Box>
+                        }
+
+
                         <Typography
                             sx={{
                                 fontFamily: 'Roboto',
@@ -192,12 +262,57 @@ export const LoginForm = () => {
                         >
                             ¿Olvidaste tu contraseña?
                         </Typography>
+
+                        {
+                            (rol === 'personal') ?
+                                <Typography
+                                    onClick={handleRol}
+                                    sx={{
+                                        fontFamily: 'Roboto',
+                                        fontWeight: '400',
+                                        fontSize: '12px',
+                                        lineHeight: '20px',
+                                        textAlign: 'right',
+                                        justifySelf: 'end',
+                                        color: '#007AFF',
+                                        ':hover': {
+                                            cursor: 'pointer',
+                                            color: '#025bbd',
+                                            transition: '0.2s ease-in-out'
+                                        }
+                                    }}
+                                >
+                                    ¿Eres Paciente?
+                                </Typography> :
+
+                                <Typography
+                                    onClick={handleRol}
+                                    sx={{
+                                        fontFamily: 'Roboto',
+                                        fontWeight: '400',
+                                        fontSize: '12px',
+                                        lineHeight: '20px',
+                                        textAlign: 'right',
+                                        justifySelf: 'end',
+                                        color: '#007AFF',
+                                        ':hover': {
+                                            cursor: 'pointer',
+                                            color: '#025bbd',
+                                            transition: '0.2s ease-in-out'
+                                        }
+                                    }}
+                                >
+                                    ¿Eres Personal Médico?
+                                </Typography>
+                        }
+
                         {/* En caso de error */}
                         <Grid2 size={{ xs: 12 }} display={(errorMessage === null || errorMessage === undefined) ? 'none' : ''} >
                             <Alert severity='warning'>
                                 {errorMessage}
                             </Alert>
                         </Grid2>
+
                         <Button
                             type='submit'
                             disabled={isAuth}
@@ -226,7 +341,7 @@ export const LoginForm = () => {
                 </Box>
 
                 {/* Logo */}
-                <Box height='20%' width='100%' display='flex' flexDirection='column' justifySelf='flex-end'  justifyContent='flex-end' >
+                <Box height='20%' width='100%' display='flex' flexDirection='column' justifySelf='flex-end' justifyContent='flex-end' >
                     <Box
                         component="img"
                         sx={{

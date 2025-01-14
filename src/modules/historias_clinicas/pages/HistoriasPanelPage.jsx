@@ -168,7 +168,7 @@ import {
     }
   
     return (
-      <>
+      <Box sx={{ overflowX: 'hidden' }} >
         <Typography
           variant="h2"
           sx={{ mb: 1, fontWeight: "bold", color: "#004d40" }}
@@ -210,7 +210,7 @@ import {
             </Box>
           </Grid2>
         </Grid2>
-      </>
+      </Box>
     );
   };
   

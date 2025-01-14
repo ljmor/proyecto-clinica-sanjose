@@ -57,22 +57,17 @@ export const PacientesPage = () => {
 
 
   const handleFilter = (filters) => {
-    const { cedula, nombre, fechain, fechafin, sexo, edad, tipo_sangre } = filters;
+    const { cedula, nombre, sexo, edad, tipo_sangre } = filters;
 
     const filtered = originalData.filter((item) => {
-      const itemDate = new Date(item.ult_adm);
-      const startDate = fechain ? new Date(fechain) : null;
-      const endDate = fechafin ? new Date(fechafin) : null;
 
-      const matchesCedula = cedula ? item.cedula.includes(cedula) : true;
+      const matchesCedula = cedula ? item.cedula.toString().includes(cedula) : true;
       const matchesNombre = nombre ? item.nombres.toLowerCase().includes(nombre.toLowerCase()) : true;
       const matchesSexo = sexo ? item.sexo === sexo : true;
       const matchesEdad = edad ? parseInt(item.edad, 10) === parseInt(edad, 10) : true;
       const matchesTipoSangre = tipo_sangre ? item.tipo_sangre.toLowerCase().includes(tipo_sangre.toLowerCase()) : true;
-      const matchesStartDate = startDate ? itemDate >= startDate : true;
-      const matchesEndDate = endDate ? itemDate <= endDate : true;
 
-      return matchesCedula && matchesNombre && matchesSexo && matchesEdad && matchesTipoSangre && matchesStartDate && matchesEndDate;
+      return matchesCedula && matchesNombre && matchesSexo && matchesEdad && matchesTipoSangre;
     });
 
     setFilteredList(filtered);
@@ -99,17 +94,17 @@ export const PacientesPage = () => {
       cancelButtonText: "Cancelar"
     }).then((result) => {
       if (result.isConfirmed) {
+        // Llamar al thunk para actualizar el store
+        dispatch(startAddDoctorPat());
+        // Limpiamos el activeRegister
+        dispatch(startSetActiveRegister({}));
+
         Swal.fire({
           title: "¡Asignado!",
           text: `El paciente con numero de cédula ${activeRegister.cedula} se te ha asignado formalmente`,
           icon: "success"
         });
-
-        // Llamar al thunk para actualizar el store
-        dispatch(startAddDoctorPat());
-
-        // Limpiamos el activeRegister
-        dispatch(startSetActiveRegister({}));
+        
       } else {
         // Limpiamos el activeRegister
         dispatch(startSetActiveRegister({}));
@@ -292,6 +287,7 @@ export const PacientesPage = () => {
               label="Buscar por cédula"
               variant="standard"
               color="#004d40"
+              type="number"
               name="cedula"
               value={cedula}
               onChange={onInputChange}

@@ -6,8 +6,6 @@ const initForm = {
   cedula: "",
   nombre: "",
   ordenarpor: "",
-  fechain: "",
-  fechafin: "",
   sexo: "",
   edad: "",
   tipo_sangre: "",
@@ -19,8 +17,6 @@ export const FilterPacientes = ({ onFilter }) => {
     onResetForm,
     cedula,
     nombre,
-    fechain,
-    fechafin,
     sexo,
     edad,
     tipo_sangre,
@@ -65,28 +61,6 @@ export const FilterPacientes = ({ onFilter }) => {
           value={nombre}
           onChange={onInputChange}
           fullWidth
-          sx={{ mb: 2 }}
-        />
-
-        <TextField
-          label="Fecha desde"
-          type="date"
-          name="fechain"
-          value={fechain}
-          onChange={onInputChange}
-          fullWidth
-          InputLabelProps={{ shrink: true }}
-          sx={{ mb: 2 }}
-        />
-
-        <TextField
-          label="Fecha hasta"
-          type="date"
-          name="fechafin"
-          value={fechafin}
-          onChange={onInputChange}
-          fullWidth
-          InputLabelProps={{ shrink: true }}
           sx={{ mb: 2 }}
         />
 

@@ -23,8 +23,6 @@ const ModalContent = styled(Box)({
   boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
   padding: "55px",
   outline: "none",
-  width: "360px",
-  maxWidth: "400px",
   position: "relative",
   overflow: "hidden",
 });
@@ -153,7 +151,10 @@ const FormTypeModal = ({ open, onClose, onSubmit }) => {
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
-            <ModalContent>
+            <ModalContent sx={{
+              width: { xs: '360px', md: '500px' },
+
+            }} >
               <Typography
                 variant="h5"
                 component="h2"

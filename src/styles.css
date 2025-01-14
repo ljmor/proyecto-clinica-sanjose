@@ -17,8 +17,8 @@ body {
 /* From Uiverse.io by adamgiebl */ 
 .loader {
   position: fixed;
-  width: 63%;
-  height: 74%;
+  width: 95%;
+  height: 80%;
 }
 .dots-container {
   display: flex;
@@ -73,3 +73,15 @@ body {
   }
 }
 
+/* Eliminar flechas en los input number */
+/* Para Chrome, Safari, Edge y Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Para Firefox */
+input[type="number"] {
+  appearance: textfield;
+}
