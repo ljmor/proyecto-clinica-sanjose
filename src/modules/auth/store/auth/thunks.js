@@ -25,9 +25,20 @@ export const startLogin = ({ email, password, cedula }) => {
                     nombres: 'Luis Mora',
                     cedula: '123102',
                     email: 'johndoe@example.com',
-                    rol: 'doctor',  // doctor, nurse, patient, admin, reception
+                    rol: 'nurse',  // doctor, nurse, patient, admin, reception
                 }
             }
+
+            /* const result = {
+                ok: true,
+                user: {
+                    id: 1,
+                    nombres: 'Luis Mora',
+                    cedula: '123',
+                    email: 'johndoe@example.com',
+                    rol: 'patient',  // doctor, nurse, patient, admin, reception
+                }
+            } */
 
             // Si todo sale bien
             dispatch(onLogin(result));

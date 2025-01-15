@@ -1,3 +1,4 @@
+import api from "../../../../api/api";
 import { appLogout, getRegisters, setActiveRegister } from "./enfermeriaSlice";
 
 
@@ -19,11 +20,10 @@ export const startLoadingPats = () => {
 
         try {
             // Obtener del backend
-            // const { user } = getState().auth; // Usurio que esta en la sesion actual (doctor)
-            // const { pats } = await api.get('/pats/${user.cedula}'); // Obtener los pacientes de este doctor con esta cedula
+            const { data } = await api.get('enfermeria/'); 
 
             // Simulacion de datos para pruebas
-            const pats = {
+            /* const pats = {
                 ok: true,
                 results: [
                     { id: 7,  nombres: 'Oliver Saraguro', email: 'johndoe@example.com', tipo_sangre: 'A+', sexo: 'Masculino', ult_adm: '2023-10-05', cedula: '1321231', fechanac: '01/01/2004', edad: '18' },
@@ -33,13 +33,8 @@ export const startLoadingPats = () => {
                     { id: 1,  nombres: 'Jose SS', email: 'johndoe@example.com', tipo_sangre: 'C-', sexo: 'Femenino', ult_adm: '2024-05-30', cedula: '4786732', fechanac: '01/01/2004', edad: '55' },
                     { id: 10, nombres: 'Josue C', email: 'johndoe@example.com', tipo_sangre: 'AS+', sexo: 'Femenino', ult_adm: '2024-05-30', cedula: '014683648', fechanac: '01/01/2004', edad: '55' },
                 ]
-            }
-
-            // Simular delay
-            await new Promise(resolve => setTimeout(resolve, 3000));
-
-            if (!pats.ok) return dispatch(getRegisters(pats));
-            dispatch(getRegisters(pats));
+            } */
+            dispatch(getRegisters(data));
 
         } catch (error) {
             console.error(error);

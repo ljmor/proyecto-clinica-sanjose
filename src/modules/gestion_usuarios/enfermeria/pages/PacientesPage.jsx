@@ -12,7 +12,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { PacienteCard } from "../../medico/components/PacienteCard";
+import { PacienteCard } from "../../enfermeria/components/PacienteCard";
 import { FilterPacientes } from "../../medico/components/FilterPacientes";
 import { useDispatch, useSelector } from "react-redux";
 import { Logout } from "@mui/icons-material";

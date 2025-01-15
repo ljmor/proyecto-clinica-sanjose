@@ -44,6 +44,8 @@ export const startLoadingHistories = () => {
         default:
           break;
       }
+
+      console.log(rolResp.activeRegister.cedula);
       
      const { data } = await api.get(`historias/${parseInt(rolResp.activeRegister.cedula)}`); // Manejar que tipo de historias recibimos dependiendo del rol de usuario y recibir aquellas solo del usuario que se pide
 
@@ -134,7 +136,7 @@ export const startLoadingHistories = () => {
       dispatch(getHistories(data));
 
     } catch (err) {
-      dispatch(setError(err.response.data.msg));
+      // dispatch(setError(err.response.data.msg));
       console.error(err);
     }
   };
