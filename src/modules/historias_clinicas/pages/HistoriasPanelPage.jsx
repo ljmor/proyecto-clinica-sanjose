@@ -47,7 +47,7 @@ import {
     const { resp: authResp } = useSelector((state) => state.auth);
     const [filteredList, setFilteredList] = useState([]);
 
-    const estados = (authResp.user.rol === 'nurse') ? ["abierta", "enEspera"] : ["enEspera", "abierta", "cerrada"]
+    const estados = (authResp.user.rol === 'nurse') ? ["abierta", "enEspera"] : ["enEspera", "abierta", "cerrada", "cerrada-editable"]
   
     useEffect(() => {
       if (resp.histories) {
@@ -191,6 +191,8 @@ import {
                     ? "En espera"
                     : status === "abierta"
                     ? "Abierta"
+                    : status === "cerrada-editable"
+                    ? "Cerradas (editables)"
                     : "Cerradas"}
                 </Typography>
                 <Grid2 container spacing={2}>

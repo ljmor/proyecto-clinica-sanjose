@@ -98,16 +98,18 @@ export const HistoriaPage = () => {
       .filter((form) =>
         tipo === "esenciales"
           ? [
-            "Ingreso Prehospitalario.xlsx",
+            "Admisión - AltaEgreso.xlsx",
             "Tratamiento médico.xlsx",
             "Epicrisis.xlsx",
             "Anamnesis.xlsx",
+            "Emergencia.xlsx",
           ].includes(form.nombre)
           : ![
-            "Ingreso Prehospitalario.xlsx",
+            "Admisión - AltaEgreso.xlsx",
             "Tratamiento médico.xlsx",
             "Epicrisis.xlsx",
             "Anamnesis.xlsx",
+            "Emergencia.xlsx",
           ].includes(form.nombre)
       )
       .map((form, index) => (
@@ -152,7 +154,7 @@ export const HistoriaPage = () => {
     // Generar fecha en formato yyyy-mm-dd 
     const getFormattedDate = () => {
       const date = new Date();
-      date.setDate(date.getDate() - 1); 
+      date.setDate(date.getDate() - 1);
       return date.toISOString().split("T")[0];
     };
 
@@ -209,7 +211,7 @@ export const HistoriaPage = () => {
     // Generar fecha en formato yyyy-mm-dd 
     const getFormattedDate = () => {
       const date = new Date();
-      date.setDate(date.getDate() - 1); 
+      date.setDate(date.getDate() - 1);
       return date.toISOString().split("T")[0];
     };
 
@@ -325,14 +327,18 @@ export const HistoriaPage = () => {
       disabled:
         ["abierta", "enEspera", "cerrada-editable"].includes(history.estado) ||
         (history.estado === "cerrada" &&
-          new Date() >
-          new Date(
-            new Date(history.fecha_ult_mod).setDate(
-              new Date(history.fecha_ult_mod).getDate() + 1
-            )
-          )) || authResp.user.rol === "patient" || authResp.user.rol === "nurse",
+          (() => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Restablece la hora a 00:00:00.000
+    
+            const fechaUltMod = new Date(history.fecha_ult_mod);
+            fechaUltMod.setHours(0, 0, 0, 0); // Restablece la hora a 00:00:00.000
+    
+            return today > new Date(fechaUltMod.setDate(fechaUltMod.getDate() + 1));
+          })()
+        ) || authResp.user.rol === "patient" || authResp.user.rol === "nurse",
       onClick: handleEdition,
-    },
+    },    
     {
       icon: <CloseIcon />,
       name: "CERRAR HISTORIA",
@@ -429,6 +435,7 @@ export const HistoriaPage = () => {
           disabled={
             history.estado !== "abierta" &&
             history.estado !== "cerrada-editable"
+            || authResp.user.rol === "patient" || authResp.user.rol === "nurse"
           }
           onClick={handleOpenModal}
           sx={{

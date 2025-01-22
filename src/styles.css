@@ -1,10 +1,10 @@
 html {
-  font-family: 'Poppins';
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
   margin: 0;
-  font-family: 'Poppins';
+  font-family: 'Poppins', sans-serif;
 }
 
 /* styles.css o en tu archivo de estilos global */
@@ -84,4 +84,91 @@ input[type="number"]::-webkit-outer-spin-button {
 /* Para Firefox */
 input[type="number"] {
   appearance: textfield;
+}
+
+/* Segmented Button */
+/* From Uiverse.io by Ghost-aft */ 
+.radio-input input {
+  display: none;
+}
+
+.radio-input {
+  --container_width: 350px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  background-color: #fff;
+  color: #494949;
+  width: var(--container_width);
+  overflow: hidden;
+  border: 1px solid rgba(53, 52, 52, 0.226);
+}
+
+.radio-input label {
+  width: 100%;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  font-weight: 600;
+  letter-spacing: -1px;
+  font-size: 14px;
+}
+
+.selection {
+  display: none;
+  position: absolute;
+  height: 100%;
+  width: calc(var(--container_width) / 2);
+  z-index: 0;
+  left: 0;
+  top: 0;
+  transition: 0.15s ease;
+}
+
+.radio-input label:has(input:checked) {
+  color: #fff;
+}
+
+.radio-input label:has(input:checked) ~ .selection {
+  background-color: rgb(51, 145, 48);
+  display: inline-block;
+}
+
+.radio-input label:nth-child(1):has(input:checked) ~ .selection {
+  transform: translateX(calc(var(--container_width) * 0 / 2));
+}
+
+.radio-input label:nth-child(2):has(input:checked) ~ .selection {
+  transform: translateX(calc(var(--container_width) * 1 / 2));
+}
+
+/* Search Input */
+/* From Uiverse.io by ErzenXz */ 
+.input {
+  width: 100%;
+  max-width: 300px;
+  height: 45px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1.5px solid lightgrey;
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  box-shadow: 0px 0px 20px -18px;
+}
+
+.input:hover {
+  border: 2px solid lightgrey;
+  box-shadow: 0px 0px 20px -17px;
+}
+
+.input:active {
+  transform: scale(0.95);
+}
+
+.input:focus {
+  border: 2px solid grey;
 }

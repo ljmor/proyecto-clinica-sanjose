@@ -21,15 +21,16 @@ const FormularioCard = ({ nombre, autor, fecha_ult_mod, fecha_creacion, archivo 
   const navigate = useNavigate();
 
   const isSpecial = [
-    "ingreso prehospitalario.xlsx",
+    "admisión - altaegreso.xlsx",
     "tratamiento médico.xlsx",
     "epicrisis.xlsx",
     "anamnesis.xlsx",
+    "emergencia.xlsx",
   ].includes(nombre.toLowerCase());
 
   const getSpecialColor = () => {
     switch (nombre.toLowerCase()) {
-      case "ingreso prehospitalario.xlsx":
+      case "admisión - altaegreso.xlsx":
         return "#4caf50";
       case "tratamiento médico.xlsx":
         return "#2196f3";
@@ -37,6 +38,8 @@ const FormularioCard = ({ nombre, autor, fecha_ult_mod, fecha_creacion, archivo 
         return "#ff9800";
       case "anamnesis.xlsx":
         return "#4232a8";
+      case "emergencia.xlsx":
+        return "#b51919";
       default:
         return "#ffffff";
     }
@@ -47,21 +50,21 @@ const FormularioCard = ({ nombre, autor, fecha_ult_mod, fecha_creacion, archivo 
     // Decodificar Base64
     const binaryString = atob(archivo);
 
-     // Convertir a un Blob
-     const byteArray = new Uint8Array(binaryString.length);
-     for (let i = 0; i < binaryString.length; i++) {
-       byteArray[i] = binaryString.charCodeAt(i);
-     }
-     const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
- 
-     // Descargar el archivo
-     const url = URL.createObjectURL(blob);
-     const link = document.createElement('a');
-     link.href = url;
-     link.download = `${resp.patient.cedula}_${resp.patient.nombres.replace(/\s+/g, '')}_${nombre}`;
-     document.body.appendChild(link);
-     link.click();
-     document.body.removeChild(link);
+    // Convertir a un Blob
+    const byteArray = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      byteArray[i] = binaryString.charCodeAt(i);
+    }
+    const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    // Descargar el archivo
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${resp.patient.cedula}_${resp.patient.nombres.replace(/\s+/g, '')}_${nombre}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   const handleView = () => {
@@ -73,7 +76,7 @@ const FormularioCard = ({ nombre, autor, fecha_ult_mod, fecha_creacion, archivo 
         state: { accion: "editar", tipo: nombre.replace(".xlsx", "") },
       });
       return;
-      
+
     }
 
     navigate("formulario", {

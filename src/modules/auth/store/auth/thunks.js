@@ -25,7 +25,7 @@ export const startLogin = ({ email, password, cedula }) => {
                     nombres: 'Luis Mora',
                     cedula: '123102',
                     email: 'johndoe@example.com',
-                    rol: 'nurse',  // doctor, nurse, patient, admin, reception
+                    rol: 'doctor',  // doctor, nurse, patient, admin, recepcionist
                 }
             }
 

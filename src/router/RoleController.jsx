@@ -5,6 +5,7 @@ import { AdminRoutes } from '../modules/gestion_usuarios/admin/routes/AdminRoute
 import { DoctorRoutes } from '../modules/gestion_usuarios/medico/routes/DoctorRoutes'
 import { EnfermeriaRoutes } from '../modules/gestion_usuarios/enfermeria/routes/EnfermeriaRoutes'
 import { PacienteRoutes } from '../modules/gestion_usuarios/paciente/routes/PacienteRoutes'
+import { PrehospitalarioRoutes } from '../modules/prehospitalario/routes/PrehospitalarioRoutes'
 
 export const RoleController = () => {
 
@@ -43,6 +44,15 @@ export const RoleController = () => {
             <Routes>
                 <Route path="/paciente/*" element={<PacienteRoutes />} />
                 <Route path="/*" element={<Navigate to="paciente" />} />
+            </Routes>
+        )
+    }
+
+    if (resp.user.rol === 'recepcionist') {
+        return (
+            <Routes>
+                <Route path="/ingresoprehospitalario/*" element={<PrehospitalarioRoutes />} />
+                <Route path="/*" element={<Navigate to="ingresoprehospitalario" />} />
             </Routes>
         )
     }
