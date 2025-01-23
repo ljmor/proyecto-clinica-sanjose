@@ -1,6 +1,5 @@
-import Swal from "sweetalert2";
 import api from "../../../api/api";
-import { setEmergenciaFormData, setNormalFormData, setNuevaHistoria, setPaciente } from "./prehospitalarioSlice";
+import { setEmergenciaFormData, setNormalFormData, setPaciente } from "./prehospitalarioSlice";
 
 export const startSetPatient = (paciente) => {
     return async (dispatch) => {
@@ -20,32 +19,12 @@ export const startSetEmergenciaFormData = (data) => {
     }
 };
 
-export const startSetNuevaHistoria = (data) => {
-    return async (dispatch) => {
-        dispatch(setNuevaHistoria(data))
-    }
-};
 
 export const startSearchPatient = (cedula) => {
     return async (dispatch) => {
         try {
 
             const { data } = await api.get(`ingreso/${cedula}`);
-            // Simulacion de datos obtenidos desde API
-            /* const data = {
-                ok: true,
-                results: {
-                    id: 231,
-                    nombres: 'Juan Javier Guarnizo Garcia',
-                    sexo: 'Masculino',
-                    cedula: cedula,
-                    fechanac: '2004-01-01',
-                    lugarnac: 'Loja',
-                    estadoCivil: 'Soltero/a',
-                    email: 'johndoe@example.com', tipo_sangre: 'A+', contacto: '0897989874'
-                }
-            }; */
-
             dispatch(setPaciente(data.resp[0]));
 
         } catch (err) {
@@ -68,23 +47,19 @@ export const startSearchPatient = (cedula) => {
 
 
 export const startAddHistory = (history) => {
-    return async (dispatch) => {
+    return async () => {
         try {
-
             const { data } = await api.post('ingreso/historia', history);
-            const newHistory = {
-                ...history,
-                id: data.history_id
-            }
 
-            dispatch(setNuevaHistoria(newHistory));
-
+            // Retornar el id de la nueva historia
+            return data.id;
         } catch (err) {
             console.error(err);
+            throw new Error('Error al agregar la historia');
         }
-
     }
 }
+
 
 export const startAddForm = (form) => {
     return async () => {
@@ -106,10 +81,13 @@ export const startAddPatient = (patient) => {
             if (!patient.id) {
                 await api.post(`ingreso/paciente`, patient);
                 return;
+            } else {
+                await api.put(`ingreso/paciente`, patient);
+                return;
             }
 
         } catch (err) {
-            console.log(err);
+            console.log(err);/* 
             const { data } = err.response;
             let errorMessages = '';
 
@@ -126,7 +104,7 @@ export const startAddPatient = (patient) => {
                 icon: 'error',
                 title: 'Error',
                 html: errorMessages
-            });
+            }); */
         }
 
     }

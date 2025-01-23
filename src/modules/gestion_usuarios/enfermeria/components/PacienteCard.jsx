@@ -23,7 +23,7 @@ export const PacienteCard = ({ paciente, disButton = false }) => {
       elevation={3}
       sx={{
         width: '320px',
-        height: '220px',
+        // height: '250px',
         padding: 3,
         borderRadius: "12px",
         transition: "all 0.3s ease",
@@ -53,7 +53,7 @@ export const PacienteCard = ({ paciente, disButton = false }) => {
       </Box>
       <Typography
         variant="h6"
-        sx={{ fontWeight: "bold", color: "#004d40", mb: 2, maxInlineSize: '260px' }}
+        sx={{ fontWeight: "bold", color: "#004d40", mb: 2, maxInlineSize: '200px' }}
       >
         {paciente.nombres}
       </Typography>

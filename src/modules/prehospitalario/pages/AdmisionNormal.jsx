@@ -45,7 +45,7 @@ export default function AdmisionNormal() {
           required
           fullWidth
           name='nombres'
-          disabled={paciente.nombres !== ''}
+          disabled={paciente.nombres !== '' && paciente.nombres !== null}
           value={nombres || ''}
           onChange={onInputChange}
           onBlur={handleBlur}
@@ -57,7 +57,7 @@ export default function AdmisionNormal() {
           label="Estado civil"
           fullWidth
           name='estadoCivil'
-          disabled={paciente.estadoCivil !== ''}
+          disabled={paciente.estadoCivil !== '' && paciente.estadoCivil !== null}
           value={estadoCivil || ''}
           onBlur={handleBlur} 
           onChange={onInputChange}
@@ -75,14 +75,13 @@ export default function AdmisionNormal() {
           fullWidth
           required
           name='sexo'
-          disabled={paciente.sexo !== ''}
+          disabled={paciente.sexo !== '' && paciente.sexo !== null}
           value={sexo || ''}
           onBlur={handleBlur} 
           onChange={onInputChange}
         >
           <MenuItem value="Masculino">Masculino</MenuItem>
           <MenuItem value="Femenino">Femenino</MenuItem>
-          <MenuItem value="otro">Otro</MenuItem>
         </StyledTextField>
       </Grid2>
       <Grid2 item size={{ xs: 12, sm: 6 }}>
@@ -91,7 +90,7 @@ export default function AdmisionNormal() {
           type="date"
           fullWidth
           name='fechanac'
-          disabled={paciente.fechanac !== ''}
+          disabled={paciente.fechanac !== '' && paciente.fechanac !== null}
           value={fechanac || ''}
           onBlur={handleBlur} 
           onChange={onInputChange}
@@ -104,7 +103,7 @@ export default function AdmisionNormal() {
           type="text"
           fullWidth
           name='tipo_sangre'
-          disabled={paciente.tipo_sangre !== ''}
+          disabled={paciente.tipo_sangre !== ''&& paciente.tipo_sangre !== null}
           value={tipo_sangre || ''}
           onBlur={handleBlur} 
           onChange={onInputChange}
@@ -117,7 +116,7 @@ export default function AdmisionNormal() {
           type="email"
           fullWidth
           name='email'
-          disabled={paciente.email !== ''}
+          disabled={paciente.email !== '' && paciente.email !== null}
           value={email || ''}
           onBlur={handleBlur} 
           onChange={onInputChange}
@@ -138,7 +137,7 @@ export default function AdmisionNormal() {
         />
       </Grid2>
       <Grid2 item size={{ xs: 12 }}>
-          <StyledTextField label="Lugar de nacimiento" name='lugarnac' value={lugarnac} disabled={paciente.lugarnac !== ''} onChange={onInputChange} onBlur={handleBlur}  fullWidth />
+          <StyledTextField label="Lugar de nacimiento" name='lugarnac' value={lugarnac} disabled={paciente.lugarnac !== '' && paciente.lugarnac !== null} onChange={onInputChange} onBlur={handleBlur}  fullWidth />
       </Grid2>
       <Grid2 item size={{ xs: 12 }}>
         <StyledTextField

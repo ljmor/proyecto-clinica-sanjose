@@ -16,7 +16,6 @@ export const prehospitalarioSlice = createSlice({
         },
         normalFormData: {},
         emergenciaFormData: {},
-        nuevaHistoria: {}
     },
     reducers: {
         setPaciente: (state, { payload }) => {
@@ -28,11 +27,8 @@ export const prehospitalarioSlice = createSlice({
         setEmergenciaFormData: (state, { payload }) => {
             state.emergenciaFormData = payload;
         },
-        setNuevaHistoria: (state, { payload }) => {
-            state.nuevaHistoria = payload;
-        }
     }
 });
 
 
-export const { setPaciente, setEmergenciaFormData, setNormalFormData, setNuevaHistoria } = prehospitalarioSlice.actions;
+export const { setPaciente, setEmergenciaFormData, setNormalFormData } = prehospitalarioSlice.actions;

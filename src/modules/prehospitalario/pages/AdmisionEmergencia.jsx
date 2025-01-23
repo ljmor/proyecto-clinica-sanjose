@@ -61,7 +61,7 @@ export default function AdmisionEmergencia() {
           value={nombres || ''}
           type='text'
           onChange={onInputChange}
-          disabled={paciente.nombres !== ''}
+          disabled={paciente.nombres !== '' && paciente.nombres !== null}
           required
           onBlur={handleBlur}
           fullWidth
@@ -74,7 +74,7 @@ export default function AdmisionEmergencia() {
           fullWidth
           required
           name='sexo'
-          disabled={paciente.sexo !== ''}
+          disabled={paciente.sexo !== '' && paciente.sexo !== null}
           value={sexo || ''}
           onBlur={handleBlur}
           onChange={onInputChange}
@@ -105,7 +105,7 @@ export default function AdmisionEmergencia() {
           name='tipo_sangre'
           onBlur={handleBlur}
           value={tipo_sangre || ''}
-          disabled={paciente.tipo_sangre !== ''}
+          disabled={paciente.tipo_sangre !== '' && paciente.tipo_sangre !== null}
           onChange={onInputChange}
           InputLabelProps={{ shrink: true }}
         />

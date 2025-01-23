@@ -15,11 +15,11 @@ import { display, styled } from '@mui/system';
 import AdmisionNormal from './AdmisionNormal';
 import AdmisionEmergencia from './AdmisionEmergencia';
 import { startLogout } from '../../auth/store/auth/thunks';
-import { Logout } from '@mui/icons-material';
+import { Logout, RestartAlt } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '../../../hooks/useForm';
 import Swal from 'sweetalert2';
-import { startAddForm, startAddHistory, startAddPatient, startSearchPatient, startSetEmergenciaFormData, startSetNormalFormData, startSetNuevaHistoria, startSetPatient, /* startSetPatient */ } from '../store/thunks';
+import { startAddForm, startAddHistory, startAddPatient, startSearchPatient, startSetEmergenciaFormData, startSetNormalFormData, startSetPatient } from '../store/thunks';
 import * as XLSX from 'xlsx';
 
 const backgroundStyles = `
@@ -157,7 +157,7 @@ export default function IngresoPreHospitalario() {
     const dispatch = useDispatch();
 
     const { cedula, onInputChange, onResetForm } = useForm(initCed);
-    const { paciente, normalFormData, emergenciaFormData, nuevaHistoria } = useSelector(state => state.prehospitalario);
+    const { paciente, normalFormData, emergenciaFormData } = useSelector(state => state.prehospitalario);
     const { resp } = useSelector(state => state.auth);
 
     useEffect(() => {
@@ -167,7 +167,7 @@ export default function IngresoPreHospitalario() {
             setIsNewPatient(false);
         }
     }, [paciente])
-    
+
 
     const handleTipoAdmisionChange = (newTipoAdmision) => {
         setTipoAdmision(newTipoAdmision);
@@ -188,13 +188,22 @@ export default function IngresoPreHospitalario() {
         }
     };
 
+    const handleReset = () => {
+        setBusquedaCedula(false);
+        onResetForm();
+        dispatch(startSetNormalFormData({}));
+        dispatch(startSetEmergenciaFormData({}));
+        dispatch(startSetPatient({}));
+    }
+
     const handleRegistro = () => {
 
         let addPaciente = {};
 
         if (tipoAdmision === 'normal') {
-            if (normalFormData.nombres === '' || normalFormData.sexo === '' || normalFormData.fecha_admision === '' || normalFormData.motivo_ingreso === '' || !normalFormData.nombres) {
+            if (normalFormData.nombres === '' || normalFormData.sexo === '' || normalFormData.fecha_admision === '' || normalFormData.motivo_ingreso === '' || !normalFormData.nombres || !normalFormData.fecha_admision || !normalFormData.motivo_ingreso) {
                 Swal.fire('Error al registrar', 'Se deben completar todos los campos obligatorios *', 'error');
+                dispatch(startSetNormalFormData({}));
                 return;
             }
 
@@ -217,6 +226,7 @@ export default function IngresoPreHospitalario() {
         if (tipoAdmision !== 'normal') {
             if (emergenciaFormData.nombres === '' || emergenciaFormData.fecha_ingreso === '' || !emergenciaFormData.nombres) {
                 Swal.fire('Error al registrar', 'Se deben completar todos los campos obligatorios *', 'error');
+                dispatch(startSetEmergenciaFormData({}));
                 return;
             }
 
@@ -263,6 +273,16 @@ export default function IngresoPreHospitalario() {
     };
 
     const createNewHistory = async () => {
+        const generateCurrentDate = () => {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        const fechaActual = generateCurrentDate();
+
         if (tipoAdmision === 'normal') {
             // Leer el archivo .xlsx
             const fileName = `/formsExcelTemplates/Admisión - AltaEgreso.xlsx`;
@@ -271,11 +291,9 @@ export default function IngresoPreHospitalario() {
             const arrayBuffer = await response.arrayBuffer();
             const workbook = XLSX.read(arrayBuffer, { type: 'array' });
 
-            // Seleccionar la hoja de trabajo (puedes usar el nombre de la hoja o el índice)
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
 
-            // 'v' es el valor, 't' es el tipo ('s' para string)
             worksheet['C4'] = { v: normalFormData.nombres, t: 's' };
             worksheet['C5'] = { v: cedula, t: 's' };
             worksheet['C6'] = { v: normalFormData.estadoCivil || '', t: 's' };
@@ -289,72 +307,61 @@ export default function IngresoPreHospitalario() {
             worksheet['C14'] = { v: normalFormData.motivo_ingreso || '', t: 's' };
             worksheet['C15'] = { v: normalFormData.diagnostico_presunt || '', t: 's' };
 
-            // Convertir el libro de trabajo a base64 directamente
+            // Establecer el ancho de las columnas
+            worksheet['!cols'] = [
+                { wch: 275 / 7.5 }, 
+                { wch: 275 / 7.5  }, 
+                { wch: 275 / 7.5  }, 
+            ];
+
             const base64String = XLSX.write(workbook, { bookType: 'xlsx', type: 'base64' });
 
-            const today = new Date();
-
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0'); // Los meses son 0 indexados
-            const day = String(today.getDate()).padStart(2, '0');
-
-            const fechaActual = `${year}-${month}-${day}`;
             const newHistory = {
                 archivo: '',
                 fechacreacion: fechaActual,
                 fecha_ult_mod: fechaActual,
                 nroforms: 1,
                 estado: 'enEspera',
-                paciente: parseInt(cedula)
-            }
-            await dispatch(startAddHistory(newHistory));
+                paciente: parseInt(cedula),
+            };
 
+            const historiaId = await dispatch(startAddHistory(newHistory));
             const ingresoForm = {
                 nombre: 'Admisión - AltaEgreso.xlsx',
                 autor: resp.user.nombres,
                 fechacreacion: fechaActual,
                 fecha_ult_mod: fechaActual,
                 archivo: base64String,
-                historia_id: nuevaHistoria.id + 1,
-            }
-            console.log(ingresoForm);
+                historia_id: historiaId,
+            };
+
+            // console.log(ingresoForm);
             await dispatch(startAddForm(ingresoForm));
-            // dispatch(startSetNuevaHistoria({}));
+
 
         } else {
-            const today = new Date();
-
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0'); // Los meses son 0 indexados
-            const day = String(today.getDate()).padStart(2, '0');
-
-            const fechaActual = `${year}-${month}-${day}`;
-
-            // Primero generamos la nueva historia clinica y retornamos su ID
             const newHistory = {
                 archivo: '',
                 fechacreacion: fechaActual,
                 fecha_ult_mod: fechaActual,
                 nroforms: 1,
                 estado: 'enEspera',
-                paciente: parseInt(cedula)
-            }
-            await dispatch(startAddHistory(newHistory));
+                paciente: parseInt(cedula),
+            };
 
-            // Leer el archivo .xlsx
+            const historiaId = await dispatch(startAddHistory(newHistory));
+
             const fileName = `/formsExcelTemplates/Emergencia.xlsx`;
             const response = await fetch(fileName);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const arrayBuffer = await response.arrayBuffer();
             const workbook = XLSX.read(arrayBuffer, { type: 'array' });
 
-            // Seleccionar la hoja de trabajo (puedes usar el nombre de la hoja o el índice)
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
 
-            // 'v' es el valor, 't' es el tipo ('s' para string)
             worksheet['C5'] = { v: emergenciaFormData.nombres, t: 's' };
-            worksheet['C6'] = { v: nuevaHistoria.id.toString(), t: 's' };
+            worksheet['C6'] = { v: historiaId.toString(), t: 's' };
             worksheet['C7'] = { v: emergenciaFormData.fecha_ingreso || '', t: 's' };
             worksheet['C8'] = { v: cedula, t: 's' };
             worksheet['C9'] = { v: emergenciaFormData.tipo_sangre || '', t: 's' };
@@ -369,7 +376,13 @@ export default function IngresoPreHospitalario() {
             worksheet['C18'] = { v: emergenciaFormData.medicamentos || '', t: 's' };
             worksheet['C19'] = { v: emergenciaFormData.procedimientos || '', t: 's' };
 
-            // Convertir el libro de trabajo a base64 directamente
+            // Establecer el ancho de las columnas
+            worksheet['!cols'] = [
+                { wch: 275 / 7.5 }, 
+                { wch: 275 / 7.5  }, 
+                { wch: 275 / 7.5  }, 
+            ];
+
             const base64String = XLSX.write(workbook, { bookType: 'xlsx', type: 'base64' });
 
             const ingresoForm = {
@@ -378,10 +391,10 @@ export default function IngresoPreHospitalario() {
                 fechacreacion: fechaActual,
                 fecha_ult_mod: fechaActual,
                 archivo: base64String,
-                historia_id: nuevaHistoria.id + 1
-            }
+                historia_id: historiaId,
+            };
+
             await dispatch(startAddForm(ingresoForm));
-            // dispatch(startSetNuevaHistoria({}));
         }
     };
 
@@ -451,7 +464,7 @@ export default function IngresoPreHospitalario() {
                         </div>
                     </PageTransition>
                     <Box mt={3} textAlign='center' >
-                        <input placeholder="Nro de cédula del paciente" type="text" className="input" name="cedula" value={cedula} onChange={onInputChange} />
+                        <input placeholder="Nro de cédula del paciente" disabled={busquedaCedula === true} type="text" className="input" name="cedula" value={cedula} onChange={onInputChange} />
                         <Button
                             variant='text'
                             onClick={handleSearchCedula}
@@ -465,6 +478,9 @@ export default function IngresoPreHospitalario() {
                         >
                             Buscar
                         </Button>
+                        <IconButton onClick={handleReset} >
+                            <RestartAlt />
+                        </IconButton>
                     </Box>
                     <Box mt={3}
                         display={(isNewPatient === false || !busquedaCedula) && 'none'}

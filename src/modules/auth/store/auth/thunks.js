@@ -23,7 +23,7 @@ export const startLogin = ({ email, password, cedula }) => {
                 user: {
                     id: 1,
                     nombres: 'Luis Mora',
-                    cedula: '123102',
+                    cedula: '123102',   
                     email: 'johndoe@example.com',
                     rol: 'doctor',  // doctor, nurse, patient, admin, recepcionist
                 }
