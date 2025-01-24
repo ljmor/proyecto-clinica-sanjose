@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -54,8 +54,18 @@ export const HistoriaPage = () => {
     }
   };
 
+
+
+
   // MANEJO DE FILTRADO
   const [filteredList, setFilteredList] = useState(history.formularios);
+
+  useEffect(() => {
+    setFilteredList(history.formularios);
+
+  }, [history.formularios]); // El efecto se ejecuta cuando history.formularios cambie
+
+
 
   const handleFilter = (tipo, ordenarpor, fechain, fechafin, autor) => {
     const filtered = history.formularios.filter((item) => {
@@ -330,15 +340,15 @@ export const HistoriaPage = () => {
           (() => {
             const today = new Date();
             today.setHours(0, 0, 0, 0); // Restablece la hora a 00:00:00.000
-    
+
             const fechaUltMod = new Date(history.fecha_ult_mod);
             fechaUltMod.setHours(0, 0, 0, 0); // Restablece la hora a 00:00:00.000
-    
+
             return today > new Date(fechaUltMod.setDate(fechaUltMod.getDate() + 1));
           })()
         ) || authResp.user.rol === "patient" || authResp.user.rol === "nurse",
       onClick: handleEdition,
-    },    
+    },
     {
       icon: <CloseIcon />,
       name: "CERRAR HISTORIA",

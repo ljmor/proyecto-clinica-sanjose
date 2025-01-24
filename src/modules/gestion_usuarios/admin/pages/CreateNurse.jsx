@@ -5,6 +5,8 @@ import { startAddRegister } from "../../store/admin/thunks";
 import { ArrowBackIos, Description } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import LoadingModal from "../../../loading/LoadingModal";
+import { useState } from "react";
 
 // VERIFICA QUE SE ADAPTE A LOS CAMPOS DE FORUMALRIO DE CREACION EN FIGMA
 
@@ -19,6 +21,7 @@ export const CreateNurse = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
     const {
         onInputChange,
         onResetForm,
@@ -48,16 +51,12 @@ export const CreateNurse = () => {
             cancelButtonColor: "#d33",
             confirmButtonText: "CREAR",
             cancelButtonText: "Cancelar"
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                dispatch(startAddRegister(data));
+                setLoading(true);
+                await dispatch(startAddRegister(data));
+                setLoading(false);
                 navigate(-1);
-
-                Swal.fire({
-                    title: "¡Creado!",
-                    text: "El usuario ha sido creado con éxito",
-                    icon: "success"
-                });
             }
         });
 
@@ -71,7 +70,11 @@ export const CreateNurse = () => {
 
     return (
         <>
-            <Box ml={{ xs: '15px', sm: '255px' }}  mt='5px' sx={{
+            <LoadingModal
+                open={loading}
+                onClose={() => setLoading(false)}
+            />
+            <Box ml={{ xs: '15px', sm: '255px' }} mt='5px' sx={{
                 position: 'fixed',
                 zIndex: 100,
             }}>
@@ -244,7 +247,7 @@ export const CreateNurse = () => {
                                     />
                                 </Box>
 
-                                
+
 
                             </Grid2>
                             {/* Pila 2 */}
@@ -254,7 +257,7 @@ export const CreateNurse = () => {
                                 width={{ xs: '100%', md: '40%' }}
                                 gap='18px'
                             >
-                                
+
                                 <Box>
                                     <Typography
                                         fontSize='13px'
@@ -338,7 +341,7 @@ export const CreateNurse = () => {
                                     />
                                 </Box>
                             </Grid2>
-                            
+
                         </Grid2>
                     </Grid2>
 

@@ -8,6 +8,9 @@ export const adminSlice = createSlice({
         activeRegister: {},
     },
     reducers: {
+        setIsLoading: (state) => {
+            state.isLoading = true;
+        },
         setActiveRegister: (state, { payload }) => {
             state.activeRegister = payload;
         },
@@ -45,4 +48,4 @@ export const adminSlice = createSlice({
 });
 
 
-export const { setActiveRegister, getRegisters, editRegister, deleteRegister, addRegister, appLogout } = adminSlice.actions;
+export const { setActiveRegister, setIsLoading, getRegisters, editRegister, deleteRegister, addRegister, appLogout } = adminSlice.actions;

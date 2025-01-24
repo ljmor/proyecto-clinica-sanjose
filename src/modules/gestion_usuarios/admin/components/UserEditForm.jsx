@@ -13,8 +13,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { startAddRegister } from '../../store/admin/thunks';
 import Swal from 'sweetalert2';
 import { Description } from '@mui/icons-material';
+import LoadingModal from '../../../loading/LoadingModal';
 
 const UserEditForm = ({ onClose }) => {
+    const [loading, setLoading] = useState(false);
     const { activeRegister } = useSelector(state => state.admin);
     const [formData, setFormData] = useState(activeRegister);
     const dispatch = useDispatch();
@@ -46,7 +48,6 @@ const UserEditForm = ({ onClose }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onClose(true);
 
         Swal.fire({
             title: "Actualizar Registro",
@@ -57,15 +58,12 @@ const UserEditForm = ({ onClose }) => {
             cancelButtonColor: "#d33",
             confirmButtonText: "ACTUALIZAR",
             cancelButtonText: "Cancelar"
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                dispatch(startAddRegister(formData));
-                
-                Swal.fire({
-                    title: "¡Actualizado!",
-                    text: "Se han actualizado los datos del usuario con éxito",
-                    icon: "success"
-                });
+                setLoading(true);
+                await dispatch(startAddRegister(formData));
+                onClose(true);
+                setLoading(false);
 
             }
         });
@@ -75,6 +73,10 @@ const UserEditForm = ({ onClose }) => {
 
     return (
         <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit}>
+            <LoadingModal
+                open={loading}
+                onClose={() => setLoading(false)}
+            />
             <Grid2 container spacing={2}>
                 <Grid2 item size={{ xs: 12, sm: 6 }}>
                     <TextField
@@ -186,15 +188,15 @@ const UserEditForm = ({ onClose }) => {
                 )}
                 {formData.tipo_sangre !== undefined && (
                     <Grid2 item size={{ xs: 12, sm: 6 }}>
-                    <TextField
-                        fullWidth
-                        label="Tipo de Sangre"
-                        name="tipo_sangre"
-                        value={formData.tipo_sangre || ''}
-                        onChange={handleChange}
-                        variant="outlined"
-                    />
-                </Grid2>
+                        <TextField
+                            fullWidth
+                            label="Tipo de Sangre"
+                            name="tipo_sangre"
+                            value={formData.tipo_sangre || ''}
+                            onChange={handleChange}
+                            variant="outlined"
+                        />
+                    </Grid2>
                 )}
                 {formData.sexo !== undefined && (
                     <Grid2 item size={{ xs: 12, sm: 6 }}>

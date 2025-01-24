@@ -22,6 +22,7 @@ import { Add, Logout } from "@mui/icons-material";
 import { useForm } from "../../../../hooks/useForm";
 import Swal from "sweetalert2";
 import { startLogout } from "../../../auth/store/auth/thunks";
+import LoadingModal from "../../../loading/LoadingModal";
 
 const initForm = {
   cedula: "",
@@ -41,6 +42,8 @@ export const PacientesPage = () => {
   const [filteredList, setFilteredList] = useState([]);
 
   const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const handleOpenModal = () => {
     dispatch(startSetActiveRegister({}));
     setOpenModal(true)
@@ -73,11 +76,11 @@ export const PacientesPage = () => {
     setFilteredList(filtered);
   };
 
-  const handleSearchPat = (event) => {
+  const handleSearchPat = async (event) => {
     event.preventDefault();
-
-    dispatch(startSearchPat(cedula));
-
+    setLoading(true);
+    await dispatch(startSearchPat(cedula || 0));
+    setLoading(false);
     onResetForm();
   }
 
@@ -92,19 +95,16 @@ export const PacientesPage = () => {
       showCancelButton: true,
       confirmButtonText: "Asignar",
       cancelButtonText: "Cancelar"
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
+        setLoading(true);
         // Llamar al thunk para actualizar el store
-        dispatch(startAddDoctorPat());
+        await dispatch(startAddDoctorPat());
+        setLoading(false);
+
         // Limpiamos el activeRegister
         dispatch(startSetActiveRegister({}));
 
-        Swal.fire({
-          title: "¡Asignado!",
-          text: `El paciente con numero de cédula ${activeRegister.cedula} se te ha asignado formalmente`,
-          icon: "success"
-        });
-        
       } else {
         // Limpiamos el activeRegister
         dispatch(startSetActiveRegister({}));
@@ -243,12 +243,18 @@ export const PacientesPage = () => {
         </Box>
       </Container>
 
+      <LoadingModal
+        open={loading}
+        onClose={() => setLoading(false)}
+      />
 
       <Modal
         open={openModal}
         onClose={handleCloseModal}
+        disableEnforceFocus
         sx={{
           backdropFilter: "blur(10px)",
+          zIndex: (theme) => theme.zIndex.modal
         }}
       >
         <Box

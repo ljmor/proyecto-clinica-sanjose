@@ -20,6 +20,7 @@ import { write } from "xlsx";
 import { startSetActiveForm, startUpdateHistory } from "../store/thunks";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import LoadingModal from "../../loading/LoadingModal";
 
 const FormularioPage = () => {
   const location = useLocation();
@@ -31,10 +32,20 @@ const FormularioPage = () => {
   const [rowData, setRowData] = useState([]);
   const [columnDefs, setColumnDefs] = useState([]);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const gridRef = useRef(null);
   const paperRef = useRef(null);
+
+  const roleStores = {
+    'doctor': 'medico',
+    'nurse': 'enfermeria',
+    'patient': 'paciente'
+  };
+
+  const storeName = roleStores[authResp.user.rol] || 'default';
+  const { activeRegister } = useSelector(state => state[storeName]);
 
   useEffect(() => {
     loadExcelData().catch((err) => {
@@ -84,6 +95,29 @@ const FormularioPage = () => {
       const rawData = utils.sheet_to_json(worksheet, {
         header: 1,
         raw: false, // Mantener el formato de las celdas
+      });
+
+      // ** Nueva Lógica: Insertar Valores Predeterminados **
+      const defaultValues = {
+        "Nombre completo": activeRegister.nombres || '',
+        "Número de historia clínica": activeHistory.id.toString() || '',
+        "Edad": activeRegister.edad || '',
+        "Sexo": activeRegister.sexo || '',
+        "Fecha de nacimiento": activeRegister.fechanac || '',
+        "Cédula": activeRegister.cedula.toString() || '',
+        "Tipo de sangre": activeRegister.tipo_sangre || '',
+      };
+
+      rawData.forEach((row, rowIndex) => {
+        if (rowIndex === 0) return; // Saltar la fila de encabezados
+        row.forEach((cell, colIndex) => {
+          if (defaultValues[cell]) {
+            const nextColIndex = colIndex + 1; // Columna derecha
+            if (!row[nextColIndex]) {
+              row[nextColIndex] = defaultValues[cell]; // Inserta valor predeterminado
+            }
+          }
+        });
       });
 
       // Obtener información de formato de columnas
@@ -212,8 +246,10 @@ const FormularioPage = () => {
     }
 
 
+    setLoading(true);
     // Llamar al thunk para actualizar el store
-    dispatch(startUpdateHistory(history));
+    await dispatch(startUpdateHistory(history));
+    setLoading(false);
 
 
     Swal.fire({
@@ -229,7 +265,7 @@ const FormularioPage = () => {
     });
   };
 
-  const handleSaveAndDownload = () => {
+  const handleSaveAndDownload = async () => {
 
     if (gridRef.current && gridRef.current.api) {
       gridRef.current.api.stopEditing();
@@ -294,8 +330,10 @@ const FormularioPage = () => {
     }
 
 
+    setLoading(true);
     // Llamar al thunk para actualizar el store
-    dispatch(startUpdateHistory(history));
+    await dispatch(startUpdateHistory(history));
+    setLoading(false);
 
 
     // Decodificar Base64
@@ -368,6 +406,10 @@ const FormularioPage = () => {
 
   return (
     <Container maxWidth="lg">
+      <LoadingModal
+        open={loading}
+        onClose={() => setLoading(false)}
+      />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

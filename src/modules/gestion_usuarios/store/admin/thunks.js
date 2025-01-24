@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 import api from "../../../../api/api";
-import { addRegister, deleteRegister, editRegister, getRegisters, setActiveRegister } from "./adminSlice";
+import { addRegister, deleteRegister, editRegister, getRegisters, setActiveRegister, setIsLoading } from "./adminSlice";
 
 export const startSetActiveRegister = (activeRegister) => {
     return async (dispatch) => {
@@ -11,6 +11,7 @@ export const startSetActiveRegister = (activeRegister) => {
 export const startLoadingRegisters = (type) => {
     return async (dispatch) => {
         try {
+            dispatch(setIsLoading());
             let endpoint = '';
 
             if (type === 'doctors') {
@@ -42,6 +43,12 @@ export const startAddRegister = (info) => {
             if (info.id) {
                 await api.put(`admin/${info.id}`, info);
                 dispatch(editRegister({ ...info }));
+
+                Swal.fire({
+                    title: "¡Actualizado!",
+                    text: "Se han actualizado los datos del usuario con éxito",
+                    icon: "success"
+                });
                 return;
             }
 
@@ -68,8 +75,14 @@ export const startAddRegister = (info) => {
 
             dispatch(addRegister(newRegister));
 
+            Swal.fire({
+                title: "¡Creado!",
+                text: "El usuario ha sido creado con éxito",
+                icon: "success"
+            });
+
         } catch (err) {
-            const { data } = err.response;
+            const { data } = await err.response;
             let errorMessages = '';
 
             if (data.errors) {
@@ -81,7 +94,7 @@ export const startAddRegister = (info) => {
                 errorMessages = `<p>${data.msg}</p>`;
             }
 
-            Swal.fire({
+            await Swal.fire({
                 icon: 'error',
                 title: 'Error',
                 html: errorMessages
@@ -99,6 +112,11 @@ export const startDeleteRegister = (cedula) => {
                 // Eliminar desde el backend a la BD
                 await api.delete(`admin/${cedula}`);
                 dispatch(deleteRegister(cedula));
+                Swal.fire({
+                    title: "¡Eliminado!",
+                    text: "El usuario ha sido eliminado del sistema con éxito",
+                    icon: "success"
+                });
             }
 
         } catch (error) {

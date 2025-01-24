@@ -1,11 +1,12 @@
 import { Alert, Box, Button, Divider, Grid2, TextField, Typography } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "../../../hooks/useForm";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { startLogin } from "../../auth/store/auth/thunks";
+import { useNavigate } from "react-router-dom";
+import LoadingModal from "../../loading/LoadingModal";
 
 const formData = {
-    email: '',
     password: '',
     cedula: '',
 }
@@ -13,17 +14,30 @@ const formData = {
 
 export const LoginForm = () => {
 
-    const { status, errorMessage } = useSelector(state => state.auth)
+    const { status, errorMessage, resp } = useSelector(state => state.auth)
     const [rol, setRol] = useState('personal');
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const { email, password, cedula, onInputChange, formState } = useForm(formData);
+    const { password, cedula, onInputChange, formState } = useForm(formData);
 
     const isAuth = useMemo(() => status === 'checking', [status]);
 
-    const onSubmit = (event) => {
+    useEffect(() => {
+        if (status === 'checking') {
+            setLoading(true);
+        } else {
+            setLoading(false);
+        }
+    }, [status])
+
+
+    const onSubmit = async (event) => {
         event.preventDefault();
-        dispatch(startLogin({ email, password, cedula }));
+        setLoading(true);
+        await dispatch(startLogin({ password, cedula, navigate }));
+        setLoading(false);
     }
 
     const handleRol = () => {
@@ -51,6 +65,10 @@ export const LoginForm = () => {
                     fontFamily: 'Merriweather Sans',
                 }}
             >
+                <LoadingModal
+                    open={loading}
+                    onClose={() => setLoading(false)}
+                />
                 <Box width='100%'>
                     <Typography
                         sx={{
@@ -79,64 +97,65 @@ export const LoginForm = () => {
                     <Divider sx={{ width: '100%', margin: '30px 0' }} />
                     {/* Formulario */}
                     <form style={{ width: '97%' }} onSubmit={onSubmit} autoComplete="off" >
-                        <Grid2 container direction='column' sx={{ mb: '15px', width: '100%' }}>
-                            <Typography
-                                variant='caption'
-                                component='label'
-                                htmlFor='emailid'
-                                sx={{
-                                    color: 'rgba(0, 0, 0, 0.48)',
-                                    fontFeatureSettings: "'liga' off, 'clig' off",
-                                    fontFamily: 'Roboto',
-                                    fontSize: '13px',
-                                    fontStyle: 'normal',
-                                    fontWeight: '300',
-                                    lineHeight: '20px',
-                                    marginLeft: '10px',
-                                }}
-                            >
-                                Usuario
-                            </Typography>
-                            <TextField
-                                type='email'
-                                required
-                                placeholder='Correo electrónico'
-                                id='emailid'
-                                name="email"
-                                value={email}
-                                onChange={onInputChange}
-                                fullWidth
-                                slotProps={{
-                                    input: {
-                                        sx: {
-                                            width: '100%',
-                                            height: '48px',
-                                            padding: '8px 8px 8px 16px',
-                                            backgroundColor: '#f2f2f2',
-                                            borderRadius: '4px',
-                                            '& input': {
-                                                color: '#080808',
-                                            },
-                                            '& input::-webkit-input-placeholder': {
-                                                color: '#080808',
-                                            },
-                                            '& .MuiOutlinedInput-notchedOutline': {
-                                                border: 'none'
-                                            },
-                                            '&:-webkit-autofill': {
-                                                WebkitBoxShadow: '0 0 0 1000px #f2f2f2 inset',
-                                                WebkitTextFillColor: '#080808',
-                                                caretColor: '#080808',
-                                            },
-                                        },
-                                    }
-                                }}
-                            />
-                        </Grid2>
 
                         {
                             (rol === 'personal') ?
+
                                 <Box>
+                                    <Grid2 container direction='column' sx={{ mb: '15px', width: '100%' }}>
+                                        <Typography
+                                            variant='caption'
+                                            component='label'
+                                            htmlFor='userid'
+                                            sx={{
+                                                color: 'rgba(0, 0, 0, 0.48)',
+                                                fontFeatureSettings: "'liga' off, 'clig' off",
+                                                fontFamily: 'Roboto',
+                                                fontSize: '13px',
+                                                fontStyle: 'normal',
+                                                fontWeight: '300',
+                                                lineHeight: '20px',
+                                                marginLeft: '10px',
+                                            }}
+                                        >
+                                            Usuario
+                                        </Typography>
+                                        <TextField
+                                            type='number'
+                                            required
+                                            placeholder='Número de cédula'
+                                            id='userid'
+                                            name="cedula"
+                                            value={cedula}
+                                            onChange={onInputChange}
+                                            fullWidth
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        width: '100%',
+                                                        height: '48px',
+                                                        padding: '8px 8px 8px 16px',
+                                                        backgroundColor: '#f2f2f2',
+                                                        borderRadius: '4px',
+                                                        '& input': {
+                                                            color: '#080808',
+                                                        },
+                                                        '& input::-webkit-input-placeholder': {
+                                                            color: '#080808',
+                                                        },
+                                                        '& .MuiOutlinedInput-notchedOutline': {
+                                                            border: 'none'
+                                                        },
+                                                        '&:-webkit-autofill': {
+                                                            WebkitBoxShadow: '0 0 0 1000px #f2f2f2 inset',
+                                                            WebkitTextFillColor: '#080808',
+                                                            caretColor: '#080808',
+                                                        },
+                                                    },
+                                                }
+                                            }}
+                                        />
+                                    </Grid2>
                                     <Grid2 container direction='column' sx={{ mb: '15px', width: '100%' }} className='animate__animated animate__headShake animate__faster' >
                                         <Typography
                                             variant='caption'
@@ -190,7 +209,7 @@ export const LoginForm = () => {
 
                                 :
 
-                                <Box className='animate__animated animate__headShake animate__faster' >  
+                                <Box className='animate__animated animate__headShake animate__faster' >
                                     <Grid2 container direction='column' sx={{ mb: '15px', width: '100%' }}  >
                                         <Typography
                                             variant='caption'
@@ -211,7 +230,7 @@ export const LoginForm = () => {
                                         </Typography>
                                         <TextField
                                             type='text'
-                                            placeholder='Ingresar cedula'
+                                            placeholder='Ingresa tu cédula'
                                             id='cedula'
                                             name="cedula"
                                             value={cedula}
@@ -244,7 +263,7 @@ export const LoginForm = () => {
                         }
 
 
-                        <Typography
+                        {/* <Typography
                             sx={{
                                 fontFamily: 'Roboto',
                                 fontWeight: '400',
@@ -261,7 +280,7 @@ export const LoginForm = () => {
                             }}
                         >
                             ¿Olvidaste tu contraseña?
-                        </Typography>
+                        </Typography> */}
 
                         {
                             (rol === 'personal') ?
@@ -272,8 +291,8 @@ export const LoginForm = () => {
                                         fontWeight: '400',
                                         fontSize: '12px',
                                         lineHeight: '20px',
-                                        textAlign: 'right',
-                                        justifySelf: 'end',
+                                        textAlign: 'left',
+                                        justifySelf: 'start',
                                         color: '#007AFF',
                                         ':hover': {
                                             cursor: 'pointer',
@@ -292,8 +311,8 @@ export const LoginForm = () => {
                                         fontWeight: '400',
                                         fontSize: '12px',
                                         lineHeight: '20px',
-                                        textAlign: 'right',
-                                        justifySelf: 'end',
+                                        textAlign: 'left',
+                                        justifySelf: 'start',
                                         color: '#007AFF',
                                         ':hover': {
                                             cursor: 'pointer',

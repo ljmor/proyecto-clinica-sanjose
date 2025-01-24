@@ -7,10 +7,12 @@ import Swal from 'sweetalert2';
 import { Edit } from '@mui/icons-material';
 import UserEditModal from './UserEditModal';
 import UserEditForm from './UserEditForm';
+import LoadingModal from '../../../loading/LoadingModal';
 
-export const ListItem = ({ nombres, especialidad = '', cedula, contacto, user, email, registro = '', tipo_sangre = '', edad = '', fechanac = '', sexo = '' }) => {
+export const ListItem = ({ nombres, especialidad = '', cedula, contacto = '', user, email = '', registro = '', tipo_sangre = '', edad = '', fechanac = '', sexo = '' }) => {
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { resp } = useSelector(state => state.admin);
 
   const handleSelectItem = () => {
@@ -34,14 +36,11 @@ export const ListItem = ({ nombres, especialidad = '', cedula, contacto, user, e
       cancelButtonColor: "#d33",
       confirmButtonText: "ELIMINAR",
       cancelButtonText: "Cancelar"
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "¡Eliminado!",
-          text: "El usuario ha sido eliminado del sistema con éxito",
-          icon: "success"
-        });
-        dispatch(startDeleteRegister(cedula));
+        setLoading(true);
+        await dispatch(startDeleteRegister(cedula));
+        setLoading(false);
       }
     });
   }
@@ -69,16 +68,20 @@ export const ListItem = ({ nombres, especialidad = '', cedula, contacto, user, e
 
   return (
     <>
+      <LoadingModal
+        open={loading}
+        onClose={() => setLoading(false)}
+      />
       <TableRow className='animate__animated animate__fadeIn animate__slow'>
         <TableCell>{nombres}</TableCell>
         {(especialidad !== '') && (<TableCell>{especialidad}</TableCell>)}
-        {(tipo_sangre !== '') && (<TableCell>{tipo_sangre}</TableCell>)}
-        {(edad !== '') && (<TableCell>{edad}</TableCell>)}
-        {(fechanac !== '') && (<TableCell>{fechanac}</TableCell>)}
+        {(tipo_sangre !== '' || resp.type === 'patients') && (<TableCell>{tipo_sangre || 'Sin info'}</TableCell>)}
+        {(edad !== '' || resp.type === 'patients') && (<TableCell>{edad || 'Sin info'}</TableCell>)}
+        {(fechanac !== '' || resp.type === 'patients') && (<TableCell>{fechanac || 'Sin info'}</TableCell>)}
         <TableCell>{cedula}</TableCell>
-        <TableCell>{email}</TableCell>
-        <TableCell>{contacto}</TableCell>
-        {(sexo !== '') && (<TableCell>{sexo}</TableCell>)}
+        {(email !== '' || resp.type === 'patients') && <TableCell>{email || 'Sin info'}</TableCell>}
+        {(contacto !== '' || resp.type === 'patients') && (<TableCell>{contacto || 'Sin info'}</TableCell>)}
+        {(sexo !== '' || resp.type === 'patients') && (<TableCell>{sexo || 'Sin info'}</TableCell>)}
         {
           (registro !== '') &&
           <TableCell>

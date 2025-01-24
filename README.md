@@ -1,4 +1,4 @@
-# Sistema de Gestión Hospitalaria Clínica San José
+# Sistema de Gestión Hospitalaria Clínica San José (Frontend)
 
 ## Descripción
 El Sistema de Gestión Hospitalaria Clínica San José es una aplicación web en desarrollo diseñada para optimizar los procesos administrativos y clínicos de la institución. Esta plataforma, construida con React y Material UI, ofrece una interfaz intuitiva y moderna para gestionar de manera eficiente la información de pacientes, historias clínicas, tratamiento médico y gestión del personal médico.
@@ -13,7 +13,6 @@ El Sistema de Gestión Hospitalaria Clínica San José es una aplicación web en
 * **Gestión de usuarios:** CRUD de los usuarios del sistema según su rol (médicos, enfermería, administrador y recepcionista).
 * **Acceso al sistema (Auth):** Implementa un sistema de autenticación seguro para controlar el acceso a las diferentes funcionalidades de la aplicación según el rol del usuario.
 * **Historias clínicas:** Facilita la creación, gestión y consulta de las historias clínicas de los pacientes, clasificadas y basadas en una serie de formularios suministrados por la institución.
-* **Diagnóstico digital del paciente:** Sección de la historia clínica de los pacientes para describir los tratamientos médicos a administrar, bajo el diagnóstico del caso emitido por el o los doctores involucrados.
 * **Ingreso prehospitalario:** Permite gestionar el ingreso de pacientes a través de servicios prehospitalarios, registrando información relevante para su atención inicial.
 
 ## Tecnologías Utilizadas
@@ -27,8 +26,6 @@ El Sistema de Gestión Hospitalaria Clínica San José es una aplicación web en
     * **Node.js:** Entorno de ejecución de JavaScript que permite construir aplicaciones web escalables.
     * **Express:** Framework web minimalista para Node.js, que simplifica la creación de servidores HTTP.
     * **MySQL:** Sistema de gestión de bases de datos relacionales, utilizado para almacenar la información del sistema.
-
-¡Claro\! Aquí te presento un borrador de instrucciones detalladas para que alguien pueda clonar y trabajar en tu proyecto, considerando que utilizas Vite y Yarn:
 
 ## Instrucciones para configurar y ejecutar el proyecto
 
@@ -53,7 +50,7 @@ El Sistema de Gestión Hospitalaria Clínica San José es una aplicación web en
 
 1.  **Accede al directorio del proyecto:**
     ```bash
-    cd proyecto-clinica-sanjose
+    cd frontend-sanjose-sys
     ```
 2.  **Instala las dependencias:**
     ```bash
@@ -72,14 +69,9 @@ El Sistema de Gestión Hospitalaria Clínica San José es una aplicación web en
 ### Estructura del proyecto
 
   * **src:** Contiene el código fuente de tu aplicación React.
-  * **public:** Contiene archivos estáticos como el archivo logos de la app.
+  * **public:** Contiene archivos estáticos como logos y plantillas de los formularios de las historias clinicas.
   * **node\_modules:** Contiene las dependencias instaladas.
 
-### Trabajar en el proyecto
-
-  * **Realizar cambios en los archivos de la carpeta `src`:** Edita los componentes, estilos y lógica del módulo que te corresponde.
-  * **Guarda los cambios:** Los cambios se guardarán automáticamente y el servidor de desarrollo recargará la página.
-  * **Utiliza las herramientas de desarrollo de tu navegador:** Para depurar y inspeccionar tu aplicación.
 
 ### Construir para producción
 
@@ -89,12 +81,8 @@ El Sistema de Gestión Hospitalaria Clínica San José es una aplicación web en
     ```
     Esto generará los archivos estáticos optimizados en la carpeta `dist`.
 
-
 ## Estado del Proyecto
-El proyecto se encuentra actualmente en fases iniciales de desarrollo. Este README será actualizado periódicamente para reflejar los avances y cambios realizados. 
+El proyecto se encuentra actualmente en las fases **finales** de desarrollo. Este README será actualizado periódicamente para reflejar los avances y cambios realizados. 
 
-**Nota:** Podria actualizarse este README en el futuro con:
-* **Arquitectura:** Diagrama de la arquitectura del sistema (si aplica).
-* **Instalación:** Instrucciones para clonar y ejecutar el proyecto.
-* **Contribuciones:** Guía para que otros desarrolladores contribuyan al proyecto.
-* **Licencia:** Especifica la licencia bajo la cual se distribuye el código.
+## Licencia
+<p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/ljmor/proyecto-clinica-sanjose.git">Software de Gestión Hospitalario - Clínica San José</a> by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://github.com/ljmor">Luis Mora</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY 4.0<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""></a></p>

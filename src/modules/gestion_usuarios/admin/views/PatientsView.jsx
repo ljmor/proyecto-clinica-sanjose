@@ -24,7 +24,7 @@ const tableHeaders = [
     { name: 'Nombres' },
     { name: 'Tipo de Sangre' },
     { name: 'Edad' },
-    { name: 'Fecha de naciemiento' },
+    { name: 'Fecha de nacimiento' },
     { name: 'Cedula' },
     { name: 'Email' },
     { name: 'Contacto' },

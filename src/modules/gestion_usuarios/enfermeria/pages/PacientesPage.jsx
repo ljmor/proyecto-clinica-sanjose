@@ -22,9 +22,9 @@ import { startLoadingPats, startLogoutApp } from "../../store/enfermeria/thunks"
 export const PacientesPage = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
-  const isMdUp = useMediaQuery(theme.breakpoints.up("md")); // Detectar pantallas >= md
+  const isMdUp = useMediaQuery(theme.breakpoints.up("md")); 
 
-  useEffect(() => {
+  useEffect( () => {
     dispatch(startLoadingPats());
   }, []);
 

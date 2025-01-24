@@ -21,6 +21,7 @@ import { useForm } from '../../../hooks/useForm';
 import Swal from 'sweetalert2';
 import { startAddForm, startAddHistory, startAddPatient, startSearchPatient, startSetEmergenciaFormData, startSetNormalFormData, startSetPatient } from '../store/thunks';
 import * as XLSX from 'xlsx';
+import LoadingModal from '../../loading/LoadingModal';
 
 const backgroundStyles = `
     .background-shapes {
@@ -152,8 +153,8 @@ function validarCedulaEcuador(cedula) {
 export default function IngresoPreHospitalario() {
     const [tipoAdmision, setTipoAdmision] = useState('normal');
     const [busquedaCedula, setBusquedaCedula] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [isNewPatient, setIsNewPatient] = useState(false);
-    const [newHistoryID, setNewHistoryID] = useState(0);
     const dispatch = useDispatch();
 
     const { cedula, onInputChange, onResetForm } = useForm(initCed);
@@ -166,6 +167,12 @@ export default function IngresoPreHospitalario() {
         } else {
             setIsNewPatient(false);
         }
+
+        if (paciente === 'No se puede registrar personal hospitalario como pacientes.') {
+            handleReset();
+            setBusquedaCedula(false);
+            setLoading(false);
+        }
     }, [paciente])
 
 
@@ -177,10 +184,12 @@ export default function IngresoPreHospitalario() {
         dispatch(startLogout());
     }
 
-    const handleSearchCedula = () => {
+    const handleSearchCedula = async () => {
         if (validarCedulaEcuador(cedula)) {
-            dispatch(startSearchPatient(cedula));
+            setLoading(true);
+            await dispatch(startSearchPatient(cedula));
             setBusquedaCedula(true);
+            setLoading(false);
 
         } else {
             setBusquedaCedula(false);
@@ -254,8 +263,10 @@ export default function IngresoPreHospitalario() {
             cancelButtonText: "Cancelar"
         }).then(async (result) => {
             if (result.isConfirmed) {
+                setLoading(true);
                 await dispatch(startAddPatient(addPaciente));
                 await createNewHistory();
+                setLoading(false);
                 dispatch(startSetNormalFormData({}));
                 dispatch(startSetEmergenciaFormData({}));
                 dispatch(startSetPatient({}));
@@ -309,9 +320,9 @@ export default function IngresoPreHospitalario() {
 
             // Establecer el ancho de las columnas
             worksheet['!cols'] = [
-                { wch: 275 / 7.5 }, 
-                { wch: 275 / 7.5  }, 
-                { wch: 275 / 7.5  }, 
+                { wch: 275 / 7.5 },
+                { wch: 275 / 7.5 },
+                { wch: 275 / 7.5 },
             ];
 
             const base64String = XLSX.write(workbook, { bookType: 'xlsx', type: 'base64' });
@@ -378,9 +389,9 @@ export default function IngresoPreHospitalario() {
 
             // Establecer el ancho de las columnas
             worksheet['!cols'] = [
-                { wch: 275 / 7.5 }, 
-                { wch: 275 / 7.5  }, 
-                { wch: 275 / 7.5  }, 
+                { wch: 275 / 7.5 },
+                { wch: 275 / 7.5 },
+                { wch: 275 / 7.5 },
             ];
 
             const base64String = XLSX.write(workbook, { bookType: 'xlsx', type: 'base64' });
@@ -424,6 +435,11 @@ export default function IngresoPreHospitalario() {
                         </IconButton>
                     </Tooltip>
 
+                    <LoadingModal
+                        open={loading}
+                        onClose={() => setLoading(false)}
+                    />
+
                     <PageTransition>
                         <Box textAlign="center" mb={4}>
                             <Typography variant="h4" component="h1" gutterBottom color="primary" sx={{ fontWeight: 'bold' }}>
@@ -463,21 +479,22 @@ export default function IngresoPreHospitalario() {
                             <span className="selection"></span>
                         </div>
                     </PageTransition>
-                    <Box mt={3} textAlign='center' >
-                        <input placeholder="Nro de cédula del paciente" disabled={busquedaCedula === true} type="text" className="input" name="cedula" value={cedula} onChange={onInputChange} />
-                        <Button
-                            variant='text'
-                            onClick={handleSearchCedula}
-                            sx={{
-                                ml: { xs: '0', sm: '10px' },
-                                textTransform: 'none',
-                                fontWeight: 'bold',
-                                fontSize: '16px',
-                                borderRadius: '5px',
-                            }}
-                        >
-                            Buscar
-                        </Button>
+                    <Box mt={3} textAlign='center' component='form' >
+        
+                            <input required placeholder="Nro de cédula del paciente" disabled={busquedaCedula === true} type="text" className="input" name="cedula" value={cedula} onChange={onInputChange} />
+                            <Button
+                                variant='text'
+                                onClick={handleSearchCedula}
+                                sx={{
+                                    ml: { xs: '0', sm: '10px' },
+                                    textTransform: 'none',
+                                    fontWeight: 'bold',
+                                    fontSize: '16px',
+                                    borderRadius: '5px',
+                                }}
+                            >
+                                Buscar
+                            </Button>
                         <IconButton onClick={handleReset} >
                             <RestartAlt />
                         </IconButton>

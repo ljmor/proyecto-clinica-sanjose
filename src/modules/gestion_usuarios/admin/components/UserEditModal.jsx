@@ -36,18 +36,6 @@ const UserEditModal = ({ open, onClose, title, children }) => {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               {title}
             </Typography>
-            {/* <IconButton
-              aria-label="close"
-              onClick={onClose}
-              sx={{
-                position: 'absolute',
-                right: 8,
-                top: 8,
-                color: 'white',
-              }}
-            >
-              <CloseIcon />
-            </IconButton> */}
           </DialogTitle>
           <DialogContent dividers sx={{ bgcolor: 'white', borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' }}>
             {children}

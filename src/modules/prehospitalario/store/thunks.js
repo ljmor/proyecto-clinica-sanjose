@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 import api from "../../../api/api";
 import { setEmergenciaFormData, setNormalFormData, setPaciente } from "./prehospitalarioSlice";
 
@@ -28,6 +29,13 @@ export const startSearchPatient = (cedula) => {
             dispatch(setPaciente(data.resp[0]));
 
         } catch (err) {
+            console.error(err);
+            const errorMessage = await err.response.data.msg;
+            if (errorMessage === 'No se puede registrar personal hospitalario como pacientes.') {
+                await Swal.fire('Errro de registro', errorMessage, 'error');
+                dispatch(setPaciente(errorMessage));
+                return;
+            }
             dispatch(setPaciente({
                 nombres: '',
                 sexo: '',
@@ -39,7 +47,8 @@ export const startSearchPatient = (cedula) => {
                 contacto: '',
                 tipo_sangre: ''
             }));
-            console.error(err);
+
+
         }
 
     }

@@ -62,16 +62,16 @@ export const PacienteCard = ({ paciente, disButton = false }) => {
           <strong>Cédula:</strong> {paciente.cedula}
         </Typography>
         <Typography variant="body2" sx={{ color: "#00695c", mb: 1 }}>
-          <strong>Edad:</strong> {paciente.edad}
+          <strong>Edad:</strong> {paciente.edad || 'Sin información'}
         </Typography>
         <Typography variant="body2" sx={{ color: "#00695c" }}>
-          <strong>Sexo:</strong> {paciente.sexo}
+          <strong>Sexo:</strong> {paciente.sexo || 'Sin información'}
         </Typography>
       </Box>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Box sx={{ display: "flex", alignItems: "center", color: "#d32f2f" }}>
           <OpacityIcon fontSize="small" sx={{ mr: 0.5 }} />
-          <Typography variant="body2">{paciente.tipo_sangre}</Typography>
+          <Typography variant="body2">{paciente.tipo_sangre || 'Sin información'}</Typography>
         </Box>
         <IconButton
           onClick={onClickPaciente}
