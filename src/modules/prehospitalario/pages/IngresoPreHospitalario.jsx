@@ -337,6 +337,7 @@ export default function IngresoPreHospitalario() {
             };
 
             const historiaId = await dispatch(startAddHistory(newHistory));
+            console.log(historiaId);
             const ingresoForm = {
                 nombre: 'Admisión - AltaEgreso.xlsx',
                 autor: resp.user.nombres,
@@ -361,6 +362,7 @@ export default function IngresoPreHospitalario() {
             };
 
             const historiaId = await dispatch(startAddHistory(newHistory));
+            console.log(historiaId);
 
             const fileName = `/formsExcelTemplates/Emergencia.xlsx`;
             const response = await fetch(fileName);

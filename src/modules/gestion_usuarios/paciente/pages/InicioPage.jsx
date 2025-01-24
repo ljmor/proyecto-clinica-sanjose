@@ -114,7 +114,7 @@ export const InicioPage = () => {
                         transition={{ duration: 0.8 }}
                     >
                         <Typography variant="h3" component="h1" sx={{ mb: 2, fontWeight: 'bold', color: '#004d40' }}>
-                            Bienvenido {resp.user.nombres}
+                            Bienvenido/a {resp.user.nombres}
                         </Typography>
                     </motion.div>
 
@@ -147,6 +147,10 @@ export const InicioPage = () => {
                             Mis Historias Clínicas
                         </StyledButton>
                     </motion.div>
+
+                    <Box position='fixed' bottom={5} >
+                        <Typography fontFamily='Roboto' color='gray' >Clínica Hospital San José - Sistema de Gestión Hospitalario</Typography>
+                    </Box>
                 </Box>
             </Container>
         </Box>
