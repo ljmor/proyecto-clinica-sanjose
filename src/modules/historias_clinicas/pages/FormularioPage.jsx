@@ -451,7 +451,7 @@ const FormularioPage = () => {
               ml: 2,
               "&:hover": { backgroundColor: "rgba(0, 77, 64, 0.04)" },
               "& .button-text": {
-                display: { xs: "none", sm: "inline" }, // Oculta el texto en xs (móviles), lo muestra en sm o mayor
+                display: { xs: "none", md: "inline" }, // Oculta el texto en xs (móviles), lo muestra en sm o mayor
               },
             }}
           >
