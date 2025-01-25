@@ -543,7 +543,7 @@ export default function IngresoPreHospitalario() {
                 >
                     <Box
                         component="img"
-                        src="/src/assets/imgs/logo1.png"
+                        src="/imgs/logo1.png"
                         sx={{
                             width: { xs: '60px', sm: '200px' }
                         }}

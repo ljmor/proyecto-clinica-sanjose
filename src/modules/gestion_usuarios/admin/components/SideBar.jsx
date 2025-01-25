@@ -76,7 +76,7 @@ export const SideBar = () => {
           justifySelf: 'center',
         }}
         alt="Logo de la clínica San José"
-        src="/src/modules/gestion_usuarios/admin/imgs/logo2.png"
+        src="/imgs/logo2.png"
       />
       <Typography fontFamily='Roboto' textAlign='center' variant='subtitle2' mt={-2} mb={2} >
         Clínica San José

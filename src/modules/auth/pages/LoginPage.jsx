@@ -42,7 +42,7 @@ export const LoginPage = () => {
                         marginTop: '20px'
                     }}
                     alt="Logo de la clínica San José"
-                    src="../src/modules/auth/imgs/logo2.png"
+                    src="/imgs/logo2.png"
                 />
 
                 <Box
@@ -55,7 +55,7 @@ export const LoginPage = () => {
                         bottom: '0'
                     }}
                     alt="Image de presentación"
-                    src="../src/modules/auth/imgs/portada.png"
+                    src="/imgs/portada.png"
                 />
             </Grid2>
         </Grid2 >

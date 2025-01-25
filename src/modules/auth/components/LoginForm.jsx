@@ -372,7 +372,7 @@ export const LoginForm = () => {
                             mb: '15px'
                         }}
                         alt="Logo de la clínica San José"
-                        src="../src/modules/auth/imgs/logo1.png"
+                        src="/imgs/logo1.png"
                     />
                 </Box>
 
