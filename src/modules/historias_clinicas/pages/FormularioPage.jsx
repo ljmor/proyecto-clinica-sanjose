@@ -449,10 +449,8 @@ const FormularioPage = () => {
               color: "#004d40",
               borderColor: "#004d40",
               ml: 2,
+              display: { xs: "none", md: "inline" }, // Oculta el texto en xs (móviles), lo muestra en md o mayor
               "&:hover": { backgroundColor: "rgba(0, 77, 64, 0.04)" },
-              "& .button-text": {
-                display: { xs: "none", md: "inline" }, // Oculta el texto en xs (móviles), lo muestra en sm o mayor
-              },
             }}
           >
             <span className="button-text">Pantalla completa</span>
