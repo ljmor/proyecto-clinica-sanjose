@@ -50,7 +50,7 @@ export const PacientesPage = () => {
       const startDate = fechain ? new Date(fechain) : null;
       const endDate = fechafin ? new Date(fechafin) : null;
 
-      const matchesCedula = cedula ? item.cedula.includes(cedula) : true;
+      const matchesCedula = cedula ? item.cedula.toString().includes(cedula) : true;
       const matchesNombre = nombre ? item.nombres.toLowerCase().includes(nombre.toLowerCase()) : true;
       const matchesSexo = sexo ? item.sexo === sexo : true;
       const matchesEdad = edad ? parseInt(item.edad, 10) === parseInt(edad, 10) : true;

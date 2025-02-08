@@ -1,7 +1,7 @@
-# Sistema de Gestión Hospitalaria Clínica San José (Frontend)
+# Sistema de Gestión Hospitalaria (Frontend)
 
 ## Descripción
-El Sistema de Gestión Hospitalaria Clínica San José es una aplicación web en desarrollo diseñada para optimizar los procesos administrativos y clínicos de la institución. Esta plataforma, construida con React y Material UI, ofrece una interfaz intuitiva y moderna para gestionar de manera eficiente la información de pacientes, historias clínicas, tratamiento médico y gestión del personal médico.
+El Sistema de Gestión Hospitalaria Clínica es una aplicación web en desarrollo diseñada para optimizar los procesos administrativos y clínicos de la institución. Esta plataforma, construida con React y Material UI, ofrece una interfaz intuitiva y moderna para gestionar de manera eficiente la información de pacientes, historias clínicas, tratamiento médico y gestión del personal médico.
 
 ## Equipo de Desarrollo
 * **Luis Mora:** [@ljmor](https://github.com/ljmor)

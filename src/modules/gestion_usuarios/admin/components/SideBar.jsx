@@ -79,7 +79,7 @@ export const SideBar = () => {
         src="/imgs/logo2.png"
       />
       <Typography fontFamily='Roboto' textAlign='center' variant='subtitle2' mt={-2} mb={2} >
-        Clínica San José
+        Clínica ABC
       </Typography>
 
       <Typography

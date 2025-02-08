@@ -146,9 +146,6 @@ export const InicioPage = () => {
                             Mis Pacientes
                         </StyledButton>
                     </motion.div>
-                <Box position='fixed' bottom={5} >
-                    <Typography fontFamily='Roboto' textAlign='center' color='gray' >Clínica Hospital San José - Sistema de Gestión Hospitalario</Typography>
-                </Box>
                 </Box>
             </Container>
         </Box>

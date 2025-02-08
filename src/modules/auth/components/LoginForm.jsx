@@ -364,14 +364,14 @@ export const LoginForm = () => {
                     <Box
                         component="img"
                         sx={{
-                            height: '110px',
+                            height: '210px',
                             width: '270px',
                             alignSelf: 'center',
                             justifySelf: 'center',
                             bottom: '0',
                             mb: '15px'
                         }}
-                        alt="Logo de la clínica San José"
+                        alt="Logo de la clínica"
                         src="/imgs/logo1.png"
                     />
                 </Box>
